@@ -1,0 +1,1 @@
+阿里云镜像：http://mirrors.aliyun.com/centos/7/isos/x86_64/
