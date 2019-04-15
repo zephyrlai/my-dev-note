@@ -2,6 +2,8 @@
     ![image text](images/dockerbase00.png) 
 1. docker三要素：
 1. 关于docker logo的解读：海洋表示宿主机、鲸鱼表示docker、集装箱表示docker容器（来源于docker镜像文件）
+1. centos7下启动docker：```systemctl start docker```
+## 二、Docker常用命令
 1. 镜像常用命令：
     1. docker version
     1. docker info
@@ -31,6 +33,7 @@
         1. -name="xxx":为容器指定一个名称  
         ![image text](images/dockerbase05.png)
         1. -d：后台运行容器，并返回容器id，机启动守护式容器
+            1. docker容器后台运行，必须要有一个前台进程
     1. docker ps:列出当前所有正在运行的容器  
         ![image text](images/dockerbase06.png)  
         1. -a：列出当前所有正在运行的容器 + 历史上运行过的容器
@@ -46,3 +49,21 @@
     1. docker restart:（根据id或name）重启容器
     1. docker stop:（根据id或name）停止容器
     1. docker kill:（根据id或name）强制停止容器
+    1. docker log：根据容器id查看容器日志：
+        1. -t 额外显示时间戳
+        1. -f 跟随最新的日志打印
+        1. --tail 显示最后的某几条
+    1. docker top [container id]:查看容器内运行的进程
+        ![image text](images/dockerbase08.png)  
+    1. docker inspect [container id]:查看容器内部细节
+    1. 使用正在运行容器：
+        1. 进入正在运行的容器：docker attach [container id],相当于docker attach [container id] /bin/bash
+        ![image text](images/dockerbase09.png)  
+        1. 使用正在运行的容器执行某项操作，直接返回结果而不进入容器： docker exec [container id] [command]
+        ![image text](images/dockerbase10.png)  
+    1. docker cp [container id]:[source] [target]：将容器中的文件拷贝到宿主机上
+        ![image text](images/dockerbase11.png)  
+## 三、Docker镜像
+1. 镜像是什么：
+    1. 镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。
+ 
