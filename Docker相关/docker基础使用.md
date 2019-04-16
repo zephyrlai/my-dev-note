@@ -87,7 +87,7 @@
         ![image text](images/dockerbase15.png)   
     1. DockerFile添加
         1. 举例
-            1. 添加父镜像
+            1. 添加父镜像 
             1. 指定容器卷
             1. 输出语句
             1. 命令行方式打开  
@@ -95,5 +95,57 @@
             ![image text](images/dockerbase17.png)   
 
 ## 五、Docekerfile
+1. 一些理论：
+    1. Dockerfile是用来构建Docker镜像的构建文件，是由一系列命令和参数构成的脚本。
+    1. Dockerfile构建的三个步骤：1.编写Dockerfile；2.执行```docker build```;3.执行```docker run```.
+    1. 编写规范：
+        1. 每个保留字指令必须为大写，并且后面至少要跟随一个参数
+        1. 指令按照从上往下，顺序执行
+        1. 注释符号：#
+        1. 每条指令都会创建一个新的镜像层，并对镜像进行提交
+    1. docker执行Dockerfile的流程
+        1. docker从基础镜像运行一个容器
+        1. 执行一条指令并对容器作出修改
+        1. 执行类似docker commit的操作提交一个新的镜像层
+        1. docker再基于刚提交的镜像运行一个新容器
+        1. 执行dockerfile中的下一条指令直到所有指令都执行完成
+    1. 从应用软件的角度来看，__Dockerfile__、__Docker镜像__ 与 __Docker容器__ 分别代表软件的三个不同阶段，
+        1. Dockerfile是软件的原材料
+        1. Docker镜像是软件的交付品
+        1. Docker容器则可以认为是软件的运行态。  
+        1. Dockerfile面向开发，Docker镜像成为交付标准，Docker容器则涉及部署与运维，三者缺一不可，合力充当Docker体系的基石。  
+            ![image text](images/dockerbase18.png)   
+        1. Dockerfile，需要定义一个Dockerfile，Dockerfile定义了进程需要的一切东西。Dockerfile涉及的内容包括执行代码或者是文件、环境变量、依赖包、运行时环境、动态链接库、操作系统的发行版、服务进程和内核进程(当应用进程需要和系统服务和内核进程打交道，这时需要考虑如何设计namespace的权限控制)等等;
+        1. Docker镜像，在用Dockerfile定义一个文件之后，docker build时会产生一个Docker镜像，当运行 Docker镜像时，会真正开始提供服务;
+        1. Docker容器，容器是直接提供服务的。
+1. Dockerfile体系结构（保留字指令）
+    1. FROM：描述基础镜像（即当前镜像是基于哪个镜像制作的）
+    1. MAINTAINER：镜像维护者的姓名与邮箱地址
+    1. RUN：容器构建时需要执行的命令（注意是针对的是容器构建，不是镜像构建）
+    1. EXPOSE：当前容器对外暴露的端口
+    1. WROKDIR：在创建容器之后，制定终端默认登录进来的工作目录
+    1. ENV：设置镜像构建过程中的环境变量
+    1. ADD：将宿主机目录下的文件拷贝进docker镜像（在这一点上与COPY命令相同），但ADD命令额外会自动处理URL或解压缩tar包
+    1. COPY：将宿主机目录下的文件拷贝进docker镜像
+    1. VOLUME：容器数据卷，用于数据保存与持久化
+    1. CMD：指定容器启动时需要执行的命令（同ENTRYPOINT）。Dockerfile中可以有多个CMD指令，但之后最后一个生效，且会被```docker run```之后的启动参数覆盖。
+    1. ENTRYPOINT：指定容器启动时需要执行的命令（同CMD）。但不同于CMD的是，ENTRYPOINT指令只会追加，而不会被覆盖
+    1. ONBUILD：当构建一个被继承的Dockerfile时运行命令，父镜像在被子继承后父镜像的onbuild被触发
+1. 案例：
+    1. 自定义镜像：mycentos
+        1. 新增自定义功能：vim指令、ifconfig指令的支持
+        1. 编写Dockerfile
+            ![image text](images/dockerbase19.png)   
+        1. 根据Dockerfile构建镜像：```docker build```  
+            ![image text](images/dockerbase21.png)   
+        1. 根据构建的镜像，构建容器：```docker run```
+            ![image text](images/dockerbase22.png)   
+    1. CMD/ENTRYPOINT 镜像案例（控制台打印当前ip，过程略）
+        1. 补充：curl命令可以用来执行下载、发送各种HTTP请求，指定HTTP头部等操作。
+            ![image text](images/dockerbase24.png)   
+            ![image text](images/dockerbase23.png)   
+
+
+    
 
  
