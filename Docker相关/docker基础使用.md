@@ -144,6 +144,40 @@
         1. 补充：curl命令可以用来执行下载、发送各种HTTP请求，指定HTTP头部等操作。
             ![image text](images/dockerbase24.png)   
             ![image text](images/dockerbase23.png)   
+    1. 自定义镜像mytomcat:基于centos镜像，自己集成jdk8、tomcat8
+        1. 编写Dockerfile
+            ``` sh
+            FROM centos
+            MAINTAINER laizonghao@foxmail.com
+            COPY haha.txt /usr/local/hahaha.txt
+            # 添加Java、tomcat
+            ADD jdk-8u201-linux-x64.tar.gz /usr/local
+            ADD apache-tomcat-8.5.40.tar.gz /usr/local
+            # 安装vim
+            RUN yum -y install vim
+            # 设置工作路径
+            ENV MYPATH /usr/local
+            WORKDIR $MYPATH
+            # 配置jdk、tomcat环境变量
+            ENV JAVA_HOME /usr/local/jdk1.8.0_201
+            ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+            ENV CATALINA_HOME /usr/local/apache-tomcat-8.5.40
+            ENV CATALINA_BASE /usr/local/apache-tomcat-8.5.40
+            ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_BASE/bin
+            # 监听端口
+            EXPOSE 8080
+            # 启动tomcat
+            # ENTRYPOINT ["echo","my tomcat8 is starting..."]
+            CMD /usr/local/apache-tomcat-8.5.40/bin/startup.sh && tail -f /usr/local/apache-tomcat-8.5.40/logs/catalina.out
+            ```
+        1. docker build 构建镜像： 
+            ![image text](images/dockerbase25.png)  
+        1. docker run 启动项目
+            ![image text](images/dockerbase26.png)  
+        1. 在宿主文件夹下发布项目及效果
+            ![image text](images/dockerbase27.png)    
+            ![image text](images/dockerbase28.png)  
+
 
 
     
