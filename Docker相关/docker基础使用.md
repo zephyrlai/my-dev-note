@@ -11,7 +11,7 @@
     1. docker --help
     1. docker images:查看本地的docker镜像  
         ![image text](images/dockerbase01.png) 
-        一个仓库源可以有多个tag，表示这个仓库源的不同版本，可以使用REPOSITORY:TAG来唯一定义不同的镜像，如果在使用镜像时不指定tag，docker将默认使用"latest"的tag，表示将会选取最新版本的tag
+        一个仓库源可以有多个tag，表示这个仓库源的不同版本，可以使用REPOSITORY:TAG来唯一定义不同的镜像，如果在使用镜像时不指定tag，docker将默认使用"latest"的tag，表示将会选取最新版本的tag  
             1. -a：列出本地所有镜像（含中间映像层）
             1. -q：只显示镜像id
             1. --digests：显示镜像的摘要信息
