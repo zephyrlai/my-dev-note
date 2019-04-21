@@ -18,7 +18,11 @@
     1. 运行mesos-slave(启动参数有点多，写个脚本，一键执行)  
         ![image text](images/docker-mesos13.png)  
     1. 效果：  
-        ![image text](images/docker-mesos14.png) 
+        ![image text](images/docker-mesos14.png)  
+1. 在mesos-master所在的主机环境搭建marathon
+    1. 从docker hub上拉取marathon镜像并运行
+        
+
 
 
 
@@ -26,3 +30,4 @@
 > 参考链接：   
 https://github.com/mesosphere/docker-containers/tree/master/mesos  
 https://blog.csdn.net/zsw7181084/article/details/54691657  
+ 
