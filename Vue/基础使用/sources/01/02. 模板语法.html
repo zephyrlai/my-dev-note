@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id='app'>
+    <h4>双大括号语法</h4>
+    <p>{{msg}}</p>
+    <p>{{msg.toUpperCase()}}</p>  <!-- 直接在大括号里写js -->
+    <p v-html="htmlCode"></p>  <!-- 相当于innerHtml -->
+    <p v-text="msg"></p> <!-- 相当于textContent -->
+    <h4>指令一：强制数据绑定</h4>
+    <img src="imgUrl" alt="???"> 
+    <img v-bind:src="imgUrl" alt="">
+    <img :src="imgUrl" alt=""> <!-- 简写 -->
+    <h4>指令二：绑定事件监听</h4>
+    <button v-on:click='myClick'>点击1</button>
+    <button @click='myClick'>点击2</button> <!-- 简写 -->
+    <button v-on:mouseOver='myOver("abcd")'>悬浮</button> <!-- 传参  -->
+
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data:{
+            msg:'haha',
+            htmlCode:'<a href="http://www.baidu.com">谷歌</a>',
+            imgUrl:'images/googlelogo.png'
+        },
+        methods: {
+            myClick(){
+                alert('哈哈1😄');
+            },
+            myOver(content){
+                alert(content+'😄');
+            }
+        }
+    })
+</script>
+</html>

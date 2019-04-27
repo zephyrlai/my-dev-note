@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<!-- 
+1. class/style绑定就是专门用来实现动态样式的 
+1. class绑定： :class='xxx'
+    xxx可以是字符串、对象、数组
+1. style绑定
+    :style="{attr1:param1,attr2:param2}",attr是css属性，param是vue对象中data中的属性
+ -->
+ <style>
+     .redClass{
+         color:red;
+     }
+     .greenClass{
+         color:green;
+     }
+     .bigClass{
+         font-size:40px;
+     }
+ </style>
+<body>
+    <div class="app">
+        <button @click='myClick'>点击</button>
+        <h4>1. class绑定：class='xxx'</h4>
+        <p :class='myClass'>字符串形式</p> <!-- 字符串形式 -->
+        <p :class='{greenClass:greenFlag,bigClass:bigFlag}'>对象形式</p> <!-- 对象形式 -->
+        <p :class='["greenClass",myClass]'>数组形式</p> <!-- 数组形式(注意要固定类名上要写引号) -->
+    <h4>2. style绑定</h4>
+        <p :style="{color:myColor,fontSize:mySize+'px'}">灰色,变大</p>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:".app",
+        data:{
+            myClass:"bigClass",
+            greenFlag:true,
+            bigFlag:false,
+            myColor:'#aaa',
+            mySize:'10',
+        },
+        methods: {
+            myClick(){
+              this.myClass='redClass' ;
+              this.greenFlag=false;
+              this.bigFlag=true;
+              this.mySize="30";
+            }
+        },
+    })
+</script>
+</html>
