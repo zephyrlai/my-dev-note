@@ -327,6 +327,69 @@
         ```
     1. 效果：  
         ![image text](images/vue07.gif)
+### 7. 事件处理
+1. 绑定监听：以点击事件为例，不传参时，默认传入事件对象，也可以指定$event作为事件对象传入
+1. 事件修饰符：
+    1. 停止事件冒泡：以点击事件为例：```@click.stop='xxx'```  
+    1. 阻止事件默认行为：以a标签的点击事件为例：```@click.prevent='xxx'```  
+1. 按键修饰符：
+    1. 以keyup事件为例：```@keyup.按键值/按键名```
+1. 参考代码：  
+    ``` html
+    <body>
+        <div class="app">
+            <h4>1. 绑定监听</h4>
+            <button @click="testMethod01('hahaha')">test01</button>
+            <button @click='testMethod02'>test02</button> <!-- 如果要自动传入事件对象，则不能有括号 -->
+            <button @click='testMethod03("hahaha",$event)'>test03</button>
+
+            <h4>2. 事件修饰符</h4>
+            <p>停止事件冒泡:@click.stop</p>
+            <div class="outer" style="width: 200px;height:200px;backgroundColor:#888" @click='testMethod04'>
+                <div class="inner" style="width: 100px;height:100px;backgroundColor:#bbb" @click.stop='testMethod05'></div>
+            </div>
+            <p>阻止事件默认行为:@click.prevent</p>
+            <a href="http://www.baidu.com" @click.prevent='testMethod06'>Google</a>
+            <h4>3. 按键修饰符:@keyup.{keyCode}/.{keyName}</h4>
+            <input type="text" @keyup.13='testMethod07'>
+            <input type="text" @keyup.enter='testMethod07'>
+        </div>
+    </body>
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el:'.app',
+            data:{
+
+            },
+            methods: {
+                testMethod01(content){
+                    console.log(content);
+                },
+                testMethod02(event){
+                    console.log(event.target.innerHTML);
+                },
+                testMethod03(content,event){
+                    console.log(content+event.target.innerText);
+                },
+                testMethod04(){
+                    console.log('outer');
+                },
+                testMethod05(){
+                    console.log('inner');
+                },
+                testMethod06(){
+                    console.log('即将跳转...');
+                },
+                testMethod07(event){
+                    console.log(event.target.value);
+                }
+            },
+        })
+    </script>
+    ```
+1. 效果：   
+    ![image text](images/vue08.gif)
 
 
 
