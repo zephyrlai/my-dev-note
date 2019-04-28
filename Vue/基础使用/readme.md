@@ -215,7 +215,7 @@
     </script>
     ```  
 1. 效果：  
-    ![image text](images/vue06.gif)  
+    <img src='images/vue06.gif' style='width:50%'/>
 ### 6. 列表渲染
 1. 基础使用
     1. v-for渲染数组中的元素：```v-for="(item,index) in array"```
@@ -326,7 +326,7 @@
         </script>
         ```
     1. 效果：  
-        ![image text](images/vue07.gif)
+    <img src='images/vue07.gif' style='width:50%'/>
 ### 7. 事件处理
 1. 绑定监听：以点击事件为例，不传参时，默认传入事件对象，也可以指定$event作为事件对象传入
 1. 事件修饰符：
@@ -388,8 +388,8 @@
         })
     </script>
     ```
-1. 效果：   
-    ![image text](images/vue08.gif)
+1. 效果： 
+    <img src='images/vue08.gif' style='width:50%'/>
 
 
 
