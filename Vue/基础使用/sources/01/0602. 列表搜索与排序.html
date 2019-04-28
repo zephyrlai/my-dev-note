@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <input type="text" v-model="searchName">
+        <ul>
+            <li v-for="(item,index) in filterPersons" :key="index">
+                {{index}}---name:{{item.name}}---age:{{item.age}}
+            </li>
+        </ul>
+        <button @click='setSortType(1)'>年龄正序</button>
+        <button @click='setSortType(2)'>年龄倒序</button>
+        <button @click='setSortType(0)'>重置排序</button>
+        <p>{{searchName}}</p>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:'.app',
+        data:{
+            searchName:'',
+            sortType:0, // -1倒序，0重置，1正序
+            persons:[
+                {name:"haha",age:18},
+                {name:"zhangsan",age:29},
+                {name:"gaga",age:30},
+                {name:"hehe",age:11},
+                {name:"xiaoming",age:22}
+            ]
+        },
+        computed: {
+            // 其中涉及的属性发生改变时自动触发
+            filterPersons(){
+                // 原始写法（过滤）
+                /* return this.persons.filter(p=>p.name.indexOf(this.searchName)!==-1); */
+                // 使用解构赋值的写法（过滤）
+                /* let {searchName,persons} = this; // 注意解构的属性必须同名
+                return persons.filter(p=>p.name.indexOf(searchName)>-1); */
+                let {searchName,persons,sortType} = this; // 注意解构的属性必须同名
+                var myPersons = persons.filter(p=>p.name.indexOf(searchName)>-1); 
+                // 排序
+                if(sortType !== 0){
+                    if(sortType === 1 ){
+                        myPersons.sort(function(p1,p2){
+                            return p1.age - p2.age;
+                        })
+                    }else{
+                        myPersons.sort(function(p1,p2){
+                            return p2.age - p1.age;
+                        })
+                    }
+                }
+                return myPersons;
+
+            }
+        },
+        methods: {
+            // 赋值计算属性中涉及的属性，将自动触发计算属性的重新计算
+            setSortType(sortType){
+                this.sortType = sortType;
+            },
+        },
+    });
+</script>
+</html>

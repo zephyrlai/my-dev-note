@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <h4>1. v-for遍历数组</h4>
+        <ul>
+            <li v-for="(item,index) in persons" :key="index">{{index}}---name:{{item.name}}---age:{{item.age}}
+                ---<button @click="myDelete(index)">删除</button>
+                ---<button @click="myUpdate(index,{name:'dog',age:2})">更新</button>
+            </li>
+        </ul>
+        <h4>2. v-for遍历对象中的属性</h4>
+        <ul>
+            <li v-for="(key,value) in persons[1]" :key="key">{{value}}-----{{key}}</li>
+        </ul>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:'.app',
+        data:{
+            persons:[
+                {name:"haha",age:18},
+                {name:"zhangsan",age:19},
+                {name:"gaga",age:20},
+                {name:"hehe",age:21},
+                {name:"xiaoming",age:22}
+            ]
+        },
+        methods: {
+            myDelete(index){
+                this.persons.splice(index,1);
+            },
+            myUpdate(index,newPerson){
+                this.persons.splice(index,1,newPerson)
+            }
+        },
+    })
+</script>
+</html>

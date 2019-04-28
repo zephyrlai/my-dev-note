@@ -27,7 +27,9 @@
 1. 效果： 
         ![image text](images/vue02.gif)
 ### 2. 模板语法：
-1. 
+1. 概念：  
+    1. 双大括号表达式
+    1. 指令(以 v-开头的自定义标签属性)
 1. 参考代码：
     ``` html
     <body>
@@ -187,3 +189,173 @@
     ```
 1. 效果：  
     ![image text](images/vue05.gif)
+### 5. 条件渲染指令
+1. v-if与v-else成对出现，是通过创建、删除标签对象实现显示与隐藏的
+1. v-show是通过控制css的display实现显示与隐藏的
+1. 参考代码：  
+    ``` html
+    <body>
+        <div class="app">
+        <p v-if="showFlag">成功</p>
+        <p v-else>失败</p>
+        <p v-show="showFlag">显示</p>
+        <p v-show="!showFlag">隐藏</p>
+        <button @click="showFlag=!showFlag">切换</button>
+
+        </div>
+    </body>
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el:".app",
+            data:{
+                showFlag:true,
+            }
+        })
+    </script>
+    ```  
+1. 效果：  
+    ![image text](images/vue06.gif)  
+### 6. 列表渲染
+1. 基础使用
+    1. v-for渲染数组中的元素：```v-for="(item,index) in array"```
+    1. v-for渲染对象中的属性：```v-for="(key,value) in obj"```
+    1. 参考代码：
+        ``` html
+        <body>
+            <div class="app">
+                <h4>1. v-for遍历数组</h4>
+                <ul>
+                    <li v-for="(item,index) in persons" :key="index">{{index}}---name:{{item.name}}---age:{{item.age}}
+                        ---<button @click="myDelete(index)">删除</button>
+                        ---<button @click="myUpdate(index,{name:'dog',age:2})">更新</button>
+                    </li>
+                </ul>
+                <h4>2. v-for遍历对象中的属性</h4>
+                <ul>
+                    <li v-for="(key,value) in persons[1]" :key="key">{{value}}-----{{key}}</li>
+                </ul>
+            </div>
+        </body>
+        <script src="js/vue.js"></script>
+        <script>
+            new Vue({
+                el:'.app',
+                data:{
+                    persons:[
+                        {name:"haha",age:18},
+                        {name:"zhangsan",age:19},
+                        {name:"gaga",age:20},
+                        {name:"hehe",age:21},
+                        {name:"xiaoming",age:22}
+                    ]
+                },
+                methods: {
+                    myDelete(index){
+                        this.persons.splice(index,1);
+                    },
+                    myUpdate(index,newPerson){
+                        this.persons.splice(index,1,newPerson)
+                    }
+                },
+            })
+        </script>
+        ```
+    1. 效果：  
+        ![image text](images/vue07.gif)
+1. 高阶：列表过滤与列表排序
+    1. 思路：让ul绑定新的计算属性，而在计算属性对应的方法中进行过滤、排序
+    1. 参考代码： 
+        ``` html
+        <body>
+            <div class="app">
+                <input type="text" v-model="searchName">
+                <ul>
+                    <li v-for="(item,index) in filterPersons" :key="index">
+                        {{index}}---name:{{item.name}}---age:{{item.age}}
+                    </li>
+                </ul>
+                <button @click='setSortType(1)'>年龄正序</button>
+                <button @click='setSortType(2)'>年龄倒序</button>
+                <button @click='setSortType(0)'>重置排序</button>
+                <p>{{searchName}}</p>
+            </div>
+        </body>
+        <script src="js/vue.js"></script>
+        <script>
+            new Vue({
+                el:'.app',
+                data:{
+                    searchName:'',
+                    sortType:0, // -1倒序，0重置，1正序
+                    persons:[
+                        {name:"haha",age:18},
+                        {name:"zhangsan",age:29},
+                        {name:"gaga",age:30},
+                        {name:"hehe",age:11},
+                        {name:"xiaoming",age:22}
+                    ]
+                },
+                computed: {
+                    // 其中涉及的属性发生改变时自动触发
+                    filterPersons(){
+                        let {searchName,persons,sortType} = this; // 注意解构的属性必须同名
+                        var myPersons = persons.filter(p=>p.name.indexOf(searchName)>-1); 
+                        // 排序
+                        if(sortType !== 0){
+                            if(sortType === 1 ){
+                                myPersons.sort(function(p1,p2){
+                                    return p1.age - p2.age;
+                                })
+                            }else{
+                                myPersons.sort(function(p1,p2){
+                                    return p2.age - p1.age;
+                                })
+                            }
+                        }
+                        return myPersons;
+                    }
+                },
+                methods: {
+                    // 赋值计算属性中涉及的属性，将自动触发计算属性的重新计算
+                    setSortType(sortType){
+                        this.sortType = sortType;
+                    },
+                },
+            });
+        </script>
+        ```
+    1. 效果：  
+        ![image text](images/vue07.gif)
+
+
+
+
+## 附：一些细枝末节
+1. ```=>```（es6语法中的arrow function，类似于Java8中的lambda表达式）
+    ``` js
+    (x) => x+6 ;
+    ```  
+    相当于  
+    ``` js
+    function(x){
+        return x+6;
+    };
+    ```
+1. 变量的解构赋值
+    1. ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构（Destructuring）。  
+    1. 直观的解构
+        ``` js
+        let { bar, foo } = { foo: 'aaa', bar: 'bbb' };
+        foo // "aaa"
+        bar // "bbb"
+        ```
+    1. 从对象中解构
+        ``` js
+        // 例一：将Math对象的对数、正弦、余弦三个方法，赋值到对应的变量上
+        let { log, sin, cos } = Math;
+        // 例二：将console.log赋值到log变量
+        const { log } = console;
+        log('hello') // hello
+        ```
+    > http://es6.ruanyifeng.com/#docs/destructuring
