@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <button @click='myClick'>点击</button>
+        <p v-show='showFlag'>哈哈哈哈</p>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:'.app',
+        data:{
+            showFlag:false,
+        },
+        beforeCreate() {
+            console.log("before create...")
+        },
+        created() {
+            console.log('created...')
+        },
+        beforeMount() {
+            console.log('before mount...')
+        },
+        mounted() {
+            this.intervalId = setInterval(()=>{
+                console.log('---');
+                this.showFlag =!this.showFlag;
+            },1000);
+        },
+        beforeDestroy() {
+            console.log('before destroy start,clear the internal...');
+            clearInterval(this.intervalId);
+            console.log('before destroy end...');
+        },
+        destroyed() {
+            console.log('destroyed...')
+        },
+        methods: {
+            myClick(){
+                this.$destroy();
+            }
+        },
+    })
+</script>
+</html>

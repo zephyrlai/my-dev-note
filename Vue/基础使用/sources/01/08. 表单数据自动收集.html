@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <form action="/xx" @submit.prevent='handleSubmit'>
+            <span>姓名</span>
+            <input type="text" v-model="username"> 
+            
+            <br/>
+            <span>密码</span>
+            <input type="password" v-model="password"> 
+            
+            <br/>
+            <span>性别</span>
+            <input type="radio" value='男' v-model="gender">男 
+            <input type="radio" value='女' v-model="gender"> 女
+            
+            <br/>
+            <span>爱好</span>
+            <input type="checkbox" value="eat" v-model="hobby"> 吃饭
+            <input type="checkbox" value="sleep"  v-model="hobby"> 睡觉
+            <input type="checkbox" value="beat"  v-model="hobby"> 打豆豆
+
+            <br/>
+            <span>城市</span>
+            <select v-model="cityId">
+                <option value=" ">请选择</option>
+                <option :value="item.code" v-for="(item, index) in citys" :key="index">{{item.name}}</option>
+            </select>
+
+            <br/>
+            <span>描述</span>
+            <textarea cols="30" rows="10" v-model='desc'></textarea>
+            <button type="submit">注册</button>
+
+        </form>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:".app",
+        data:{
+            username:"",
+            password:"",
+            gender:'女',
+            hobby:[],
+            // 动态生成下拉框选项
+            citys:[
+                {name:'北京',code:'beijing'},
+                {name:'浙江',code:'zhejiang'},
+                {name:'江苏',code:'jiangsu'}
+            ],
+            // 下拉框实际选中值
+            cityId:'beijing',
+            desc:"哈哈哈哈"
+        },
+        methods: {
+            handleSubmit(){
+                console.log(this.username+" "+this.password+" "+this.gender+" "+this.hobby+" "+this.cityId+" "+this.desc)
+            }
+        },
+    });
+</script>
+</html>

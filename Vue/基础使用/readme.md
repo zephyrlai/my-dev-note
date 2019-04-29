@@ -390,7 +390,144 @@
     ```
 1. 效果： 
     <img src='images/vue08.gif' style='width:50%'/>
+### 8. 表单数据的自动收集
+1. 思路：直接在表单标签上，使用v-model属性绑定到vue对象的数据属性即可
+1. 参考代码：
+    ``` html
+    <body>
+        <div class="app">
+            <form action="/xx" @submit.prevent='handleSubmit'>
+                <span>姓名</span>
+                <input type="text" v-model="username"> 
+                
+                <br/>
+                <span>密码</span>
+                <input type="password" v-model="password"> 
+                
+                <br/>
+                <span>性别</span>
+                <input type="radio" value='男' v-model="gender">男 
+                <input type="radio" value='女' v-model="gender"> 女
+                
+                <br/>
+                <span>爱好</span>
+                <input type="checkbox" value="eat" v-model="hobby"> 吃饭
+                <input type="checkbox" value="sleep"  v-model="hobby"> 睡觉
+                <input type="checkbox" value="beat"  v-model="hobby"> 打豆豆
 
+                <br/>
+                <span>城市</span>
+                <select v-model="cityId">
+                    <option value=" ">请选择</option>
+                    <option :value="item.code" v-for="(item, index) in citys" :key="index">{{item.name}}</option>
+                </select>
+
+                <br/>
+                <span>描述</span>
+                <textarea cols="30" rows="10" v-model='desc'></textarea>
+                <button type="submit">注册</button>
+
+            </form>
+        </div>
+    </body>
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el:".app",
+            data:{
+                username:"",
+                password:"",
+                gender:'女',
+                hobby:[],
+                // 动态生成下拉框选项
+                citys:[
+                    {name:'北京',code:'beijing'},
+                    {name:'浙江',code:'zhejiang'},
+                    {name:'江苏',code:'jiangsu'}
+                ],
+                // 下拉框实际选中值
+                cityId:'beijing',
+                desc:"哈哈哈哈"
+            },
+            methods: {
+                handleSubmit(){
+                    console.log(this.username+" "+this.password+" "+this.gender+" "+this.hobby+" "+this.cityId+" "+this.desc)
+                }
+            },
+        });
+    </script>
+    ```
+1. 效果： 
+    ![](images/vue09.gif)  
+### 9. VUE生命周期
+1. 大致文字描述：
+    1. 在```new Vue();```之后，初始化事件与生命周期
+    1. 调用```beforeCreate()```函数，然后初始化一些注入数据
+    1. 调用```create()```函数
+    1. 检测有没有```el```选项，没有的话就等待调用```mount()```函数;
+    1. 检测有咩有```template```选项，有的话就编译指定的template，没有的话就编译```el```外部的html做为template(编译指的是将vue模板语法中的变量、属性替换为实际需要显示的数据、属性);
+    1. 调用beforeMount()函数，创建vue对象的el属性，并替换掉原来的el属性
+    1. 调用mounted()函数；
+    1. __至此，整个页面初始化渲染完成__
+    1. 数据更新时
+        1. 调用beforeUpdate()方法
+        1. 虚拟DOM重载
+        1. 调用update()方法
+    1. 当vue对象的destroy()方法被调用时
+        1. 调用beforeDestory()方法
+        1. 停止各类子组件、事件监听器
+        1. 调用destory()方法。
+        1. __至此，整个vue对象被销毁__
+1. vue对象生命周期的官方流程图
+    ![](images/vue11.png)
+1. 参考代码：  
+    ``` html
+    <body>
+        <div class="app">
+            <button @click='myClick'>点击</button>
+            <p v-show='showFlag'>哈哈哈哈</p>
+        </div>
+    </body>
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el:'.app',
+            data:{
+                showFlag:false,
+            },
+            beforeCreate() {
+                console.log("before create...")
+            },
+            created() {
+                console.log('created...')
+            },
+            beforeMount() {
+                console.log('before mount...')
+            },
+            mounted() {
+                this.intervalId = setInterval(()=>{
+                    console.log('---');
+                    this.showFlag =!this.showFlag;
+                },1000);
+            },
+            beforeDestroy() {
+                console.log('before destroy start,clear the internal...');
+                clearInterval(this.intervalId);
+                console.log('before destroy end...');
+            },
+            destroyed() {
+                console.log('destroyed...')
+            },
+            methods: {
+                myClick(){
+                    this.$destroy();
+                }
+            },
+        })
+    </script>
+    ```
+1. 效果：
+    ![](images/vue10.gif)
 
 
 
