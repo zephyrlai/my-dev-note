@@ -3,15 +3,15 @@
         <form class="form-horizontal">
           <div class="form-group">
             <label>用户名</label>
-            <input type="text" class="form-control" placeholder="用户名">
+            <input type="text" class="form-control" placeholder="用户名" v-model='name'>
           </div>
           <div class="form-group">
             <label>评论内容</label>
-            <textarea class="form-control" rows="6" placeholder="评论内容"></textarea>
+            <textarea class="form-control" rows="6" placeholder="评论内容" v-model='content'></textarea>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <button type="button" class="btn btn-default pull-right">提交</button>
+              <button type="button" class="btn btn-default pull-right" @click='add'>提交</button>
             </div>
           </div>
         </form>
@@ -20,7 +20,32 @@
 
 <script>
 export default {
-    
+    data:{
+      name: '',
+      content: ''
+    },
+    // 声明接受的属性名：类型、是否必要
+    props:{
+      addComment:{
+        type:Function,
+        required:true,
+      }
+    },
+    methods: {
+      add(){
+        if(!this.name || !this.content){
+          alert('用户名或评论内容不能为空');
+          return
+        }
+        const name = this.name;
+        const content = this.content;
+        const newComment = {
+          name,content
+        } 
+        this.addComment(newComment);
+      }
+    }
+
 }
 
 </script>

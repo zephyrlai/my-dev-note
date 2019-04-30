@@ -10,7 +10,7 @@
       </div>
     </header>
     <div class="container">
-      <Add/>
+      <Add :addComment="addComment"/>
       <List :comments='comments'/>
     </div>
   </div>
@@ -27,6 +27,7 @@ export default {
     },
     data(){
         return {
+            // 数据在哪里，就在哪里提供维护（CRUD）的方法
             comments: [
                 {
                     name:"zhangsan",
@@ -41,6 +42,11 @@ export default {
                     content:'vue 哈哈'
                 }
             ]
+        }
+    },
+    methods: {
+        addComment(comment){
+            this.comments.unshift(comment);
         }
     }
 }
