@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+    <span>原始时间：{{date}}</span> <br/>
+    <span>格式化时间：{{date | dateFormat}}</span>  <br/>
+    <span>格式化年月日：{{date | dateFormat('YYYY-MM-DD')}}</span>    <br/>
+    <span>格式化时分秒：{{date | dateFormat('HH:mm:ss')}}</span>
+
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.js"></script>
+<script>
+    //自定义过滤器
+    Vue.filter("dateFormat",function(value,format){
+        return moment(value).format(format || "YYYY-MM-DD HH:mm:ss");
+    })
+
+    let vm = new Vue({
+        el:'.app',
+        data:{
+            date:new Date()
+        },
+        // 1s刷新一次
+        mounted() {
+            setInterval(()=>{
+                this.date=new Date();
+            },1000);
+        }
+    });
+</script>
+</html>

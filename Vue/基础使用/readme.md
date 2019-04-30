@@ -528,6 +528,224 @@
     ```
 1. 效果：
     ![](images/vue10.gif)
+### 10. 过渡与动画
+1. 在进入/离开的过渡中，会有6个class切换，如图：
+    ![](images/vue12.png)
+1. 参考代码：
+    ``` html
+    <style>
+        /* 针对name='test01'动画的样式 */
+        .test01-enter-active,.test01-leave-active{
+            transition: opacity 2s;
+        }
+        .test01-leave-to,.test01-enter{
+            opacity: 0;
+        }
+
+        /* 针对name='test02'动画的样式 */
+        .test02-enter-active,.test02-leave-active{
+            transition: all 1s;
+        }
+        .test02-enter,.test02-leave-to{
+            transform: translateX(20px);
+            opacity: 0;
+        }
+
+        /* 针对name='test03'动画的样式 */
+        .test03-enter-active {
+            animation: bounce-in .5s;
+        }
+        .test03-leave-active {
+            animation: bounce-in .5s reverse;
+        }
+        @keyframes bounce-in {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.5);
+        }
+        100% {
+            transform: scale(1);
+        }
+        }
+    </style>
+    <body>
+        <div class="app">
+            <button @click='showFlag01=!showFlag01'>按钮01</button>
+            <transition name='test01'>
+                <p v-show='showFlag01'>哈哈哈11</p>
+            </transition>
+            <br/>
+            <button @click='showFlag02=!showFlag02'>按钮02</button>
+            <transition name='test02'>
+                <p v-show='showFlag02'>哈哈哈22</p>
+            </transition>
+            <br/>
+            <button @click='showFlag03=!showFlag03'>按钮03</button> 
+            <br/>
+            <transition name='test03'>
+                <p v-show='showFlag03' style='background-color: #aaa;display: inline-block;'>哈哈哈22</p>
+            </transition>
+        </div>
+    </body>
+    <script src='js/vue.js'></script>
+    <script>
+        new Vue({
+            el:'.app',
+            data:{
+                showFlag01:true,
+                showFlag02:true,
+                showFlag03:true,
+            }
+        })
+    </script>
+    ```
+1. 效果：
+    ![](images/vue12.gif)
+### 11. 过滤器
+1. 定义过滤器(定义在vue对象外面)  
+    ```Vue.filter(filterName,function(val,attr1,attr2...){...})```
+1. 使用过滤器(以双大括号表达式为例)  
+    ```{{data | filterName(attr1,attr2...)}}```
+1. 参考代码：
+    ``` html
+    <body>
+        <div class="app">
+        <span>原始时间：{{date}}</span> <br/>
+        <span>格式化时间：{{date | dateFormat}}</span>  <br/>
+        <span>格式化年月日：{{date | dateFormat('YYYY-MM-DD')}}</span>    <br/>
+        <span>格式化时分秒：{{date | dateFormat('HH:mm:ss')}}</span>
+
+        </div>
+    </body>
+    <script src="js/vue.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.js"></script>
+    <script>
+        //自定义过滤器
+        Vue.filter("dateFormat",function(value,format){
+            return moment(value).format(format || "YYYY-MM-DD HH:mm:ss");
+        })
+
+        let vm = new Vue({
+            el:'.app',
+            data:{
+                date:new Date()
+            },
+            // 1s刷新一次
+            mounted() {
+                setInterval(()=>{
+                    this.date=new Date();
+                },1000);
+            }
+        });
+    </script>
+    ```
+1. 效果：
+    ![](images/vue13.gif)
+### 12. 指令
+1. 常用内置指令：   
+    1. v:text: 更新元素的 textContent 
+    1. v-html: 更新元素的 innerHTML 
+    1. v-if: 如果为 true, 当前标签才会输出到页
+    1. v-else: 如果为 false, 当前标签才会输出到页面 
+    1. v-show: 通过控制 display 样式来控制显示/隐藏 
+    1. v-for: 遍历数组/对象 
+    1. v-on: 绑定事件监听, 一般简写为@ 
+    1. v-bind: 强制绑定解析表达式, 可以省略 v-bind 
+    1. v-model: 双向数据绑定 
+    1. ref: 指定唯一标识,vue 对象通过$refs 属性访问这个元素对象 
+    1. v-cloak: 防止闪现, 与 css 配合:[v-cloak]{display:none}
+    1. 参考代码：
+        ``` html
+        <style>
+            [v-cloak]{
+                display: none;
+            }
+        </style>
+        <body>
+            <div class="app">
+                <p>{{msg}}</p>
+                <p v-text='msg'></p> 
+                <p v-text='msg' v-cloak>{{msg}}</p>
+            </div>
+        </body>
+        <script src="js/vue.js"></script>
+        <script>
+        alert("111");
+        </script>
+        <script>
+            new Vue({
+                el:'.app',
+                data:{
+                    msg:'哈哈'
+                }
+            })
+        </script>
+        ```
+    1. 效果：   
+        ![](images/vue14.gif)
+1. 自定义指令
+    1. 注册全局指令（在vue对象外）：  
+        ``` Vue.directive(name,function(el,bind){...})```
+    1. 注册局部指令（在vue对象内部）： 
+        ``` js
+        directives:{
+            name:function(){...}
+        }
+        ``` 
+    1. bind里有什么：  
+        ![](images/vue16.png)
+    1. 参考代码：
+        ``` html
+        <body>
+            <div id='app01'>
+                <p v-upper-case='msg'></p>
+                <p v-lower-case='msg'></p>
+            </div>
+            <div id='app02'>
+                <p v-upper-case='msg'></p>
+                <p v-lower-case='msg'></p>
+            </div>
+        </body>
+        <script src='js/vue.js'></script>
+        <script>
+            // 注册全局指令
+            Vue.directive("upper-case",(el,bind)=>{
+                el.innerHTML = bind.value.toUpperCase();
+            })
+            new Vue({
+                el:'#app01',
+                data:{
+                    msg:"HELLO,world!"
+                }
+            });
+            new Vue({
+                el:'#app02',
+                data:{
+                    msg:"HELLO,world!"
+                },
+                // 注册局部指令
+                directives:{
+                    'lower-case':(el,bind)=>{
+                        console.dir(bind);
+                        el.innerHTML = bind.value.toLowerCase();
+                    }
+                }
+            })
+        </script>
+        ```
+    1. 效果：  
+        ![](images/vue15.png)
+### 13. 插件
+1. 参考代码：
+    ``` js
+
+    ``` 
+    ``` html
+
+    ```
+
 
 
 
