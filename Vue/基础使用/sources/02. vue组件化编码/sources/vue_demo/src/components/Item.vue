@@ -1,0 +1,16 @@
+<template>
+    <li class="list-group-item">
+        <div class="handle">
+            <a href="javascript:;">删除</a>
+        </div>
+        <p class="user"><span >{{comment.name}}</span><span>说:</span></p>
+        <p class="centence">{{comment.content}}</p>
+    </li>
+</template>
+
+<script>
+export default {
+    // 声明接收属性（目前来自List.vue）的comment对象
+    props:['comment']
+}
+</script>
