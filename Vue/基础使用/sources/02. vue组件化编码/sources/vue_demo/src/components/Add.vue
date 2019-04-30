@@ -20,9 +20,11 @@
 
 <script>
 export default {
-    data:{
-      name: '',
-      content: ''
+    data(){
+      return{
+        name: '',
+        content: ''
+      }
     },
     // 声明接受的属性名：类型、是否必要
     props:{
@@ -43,6 +45,8 @@ export default {
           name,content
         } 
         this.addComment(newComment);
+        this.name='';
+        this.content='';
       }
     }
 

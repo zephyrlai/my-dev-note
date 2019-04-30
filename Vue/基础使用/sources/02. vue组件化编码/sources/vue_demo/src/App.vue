@@ -4,14 +4,14 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12">
-            <h1>请发表对React的评论</h1>
+            <h1>请发表对Vue的评论</h1>
           </div>
         </div>
       </div>
     </header>
     <div class="container">
       <Add :addComment="addComment"/>
-      <List :comments='comments'/>
+      <List :comments='comments' :deleteComment='deleteComment'/>
     </div>
   </div>
 </div>
@@ -47,6 +47,9 @@ export default {
     methods: {
         addComment(comment){
             this.comments.unshift(comment);
+        },
+        deleteComment(index){
+            this.comments.splice(index,1);
         }
     }
 }
