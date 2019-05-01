@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id='app01'>
+        <p v-upper-case='msg'></p>
+        <p v-lower-case='msg'></p>
+    </div>
+    <div id='app02'>
+        <p v-upper-case='msg'></p>
+        <p v-lower-case='msg'></p>
+    </div>
+</body>
+<script src='js/vue.js'></script>
+<script>
+    // 注册全局指令
+    Vue.directive("upper-case",(el,bind)=>{
+        el.innerHTML = bind.value.toUpperCase();
+    })
+    new Vue({
+        el:'#app01',
+        data:{
+            msg:"HELLO,world!"
+        }
+    });
+    new Vue({
+        el:'#app02',
+        data:{
+            msg:"HELLO,world!"
+        },
+        // 注册局部指令
+        directives:{
+            'lower-case':(el,bind)=>{
+                console.dir(bind);
+                el.innerHTML = bind.value.toLowerCase();
+            }
+        }
+    })
+</script>
+</html>

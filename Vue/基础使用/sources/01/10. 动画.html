@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    /* 针对name='test01'动画的样式 */
+    .test01-enter-active,.test01-leave-active{
+        transition: opacity 2s;
+    }
+    .test01-leave-to,.test01-enter{
+        opacity: 0;
+    }
+
+    /* 针对name='test02'动画的样式 */
+    .test02-enter-active,.test02-leave-active{
+        transition: all 1s;
+    }
+    .test02-enter,.test02-leave-to{
+        transform: translateX(20px);
+        opacity: 0;
+    }
+
+    /* 针对name='test03'动画的样式 */
+    .test03-enter-active {
+        animation: bounce-in .5s;
+    }
+    .test03-leave-active {
+        animation: bounce-in .5s reverse;
+    }
+    @keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+    }
+</style>
+<body>
+    <div class="app">
+        <button @click='showFlag01=!showFlag01'>按钮01</button>
+        <transition name='test01'>
+            <p v-show='showFlag01'>哈哈哈11</p>
+        </transition>
+        <br/>
+        <button @click='showFlag02=!showFlag02'>按钮02</button>
+        <transition name='test02'>
+            <p v-show='showFlag02'>哈哈哈22</p>
+        </transition>
+        <br/>
+        <button @click='showFlag03=!showFlag03'>按钮03</button> 
+        <br/>
+        <transition name='test03'>
+            <p v-show='showFlag03' style='background-color: #aaa;display: inline-block;'>哈哈哈22</p>
+        </transition>
+    </div>
+</body>
+<script src='js/vue.js'></script>
+<script>
+    new Vue({
+        el:'.app',
+        data:{
+            showFlag01:true,
+            showFlag02:true,
+            showFlag03:true,
+        }
+    })
+</script>
+</html>

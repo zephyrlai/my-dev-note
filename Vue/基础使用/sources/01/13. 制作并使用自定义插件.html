@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <p>{{msg}}</p>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="myPlugin.js"></script>
+<script>
+    // 使 用 自 定 义 插 件 
+    Vue.use(MyPlugin)
+
+    let vm = new Vue({
+        el:'.app',
+        date:{
+            msg:'Hello World!'
+        }
+    })
+    // 调 用 自 定 义 的 静 态 方 法 
+    Vue.myGlobalMethod() // 调 用 自 定 义 的 对 象 方 法 
+    vm.$myMethod()
+</script>
+</html>

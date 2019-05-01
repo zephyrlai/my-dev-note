@@ -96,7 +96,26 @@
 1. 运行```npm run dev```  
 1. 效果：  
     ![](images/vue19.png)
-
-
-
+### 3. ESLint
+1. ESLint时什么：
+    1. ESLint 是一个代码规范检查工具 
+    1. 它定义了很多特定的规则, 一旦你的代码违背了某一规则,eslint会作出非常有用的提示
+1. ESLint提供以下支持
+    1. ES 
+    1. JSX 
+    1. style 检查 
+    1. 自定义错误和提示
+1. 规则的错误等级有三种
+    1. 0：关闭规则。 
+    1. 1：打开规则，并且作为一个警告（信息打印黄色字体） 
+    1. 2：打开规则，并且作为一个错误（信息打印红色字体）
+1. 3中方式更改规则x`
+    1. .eslintrc.js: 全局规则配置文件 'rules':{ 'no-new':1 }
+    1. 在 js/vue 文件中修改局部规则 
+        ``` js
+            /*eslint-disableno-new*/ 
+            newVue({ el:'body', components:{App} })
+        ```
+    1. .eslintignore: 指令检查忽略的文件 *.js *.vue
+### 4. 
           
