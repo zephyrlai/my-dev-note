@@ -1,21 +1,59 @@
 <template>
-    <div>
-        <img src='./assets/logo.png'/>
-        <!-- 3. 使用标签 -->
-        <HelloWorld/>
+  <div>
+    <header class="site-header jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <h1>请发表对Vue的评论</h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <Add :addComment="addComment"/>
+      <List :comments='comments' :deleteComment='deleteComment'/>
     </div>
+  </div>
+</div>
 </template>
 
 <script>
-// 1. 引入组件
-import HelloWorld from './components/HelloWorld'
+    import Add from './components/Add.vue'
+    import List from './components/List.vue'
 export default {
-  // 2. 将组件映射为标签
-  components: {
-    HelloWorld
-  }
+    components:{
+        Add,
+        List
+    },
+    data(){
+        return {
+            // 数据在哪里，就在哪里提供维护（CRUD）的方法
+            comments: [
+                {
+                    name:"zhangsan",
+                    content:'vue is good'
+                },
+                {
+                    name:"lisi",
+                    content:'vue is useful'
+                },
+                {
+                    name:"wangwu",
+                    content:'vue 哈哈'
+                }
+            ]
+        }
+    },
+    methods: {
+        addComment(comment){
+            this.comments.unshift(comment);
+        },
+        deleteComment(index){
+            this.comments.splice(index,1);
+        }
+    }
 }
 </script>
 
-<style lang="">
+<style>
 </style>
