@@ -1,25 +1,19 @@
 <template>
       <ul class="todo-main">
-        <li>
-          <label>
-            <input type="checkbox"/>
-            <span>xxxxx</span>
-          </label>
-          <button class="btn btn-danger" style="display:none">删除</button>
-        </li>
-        <li>
-          <label>
-            <input type="checkbox"/>
-            <span>yyyy</span>
-          </label>
-          <button class="btn btn-danger" style="display:none">删除</button>
-        </li>
+        <Item v-for="(item,index) in todoList" :key='index' :item='item' :index:='index'/>
       </ul>
 </template>
 
 <script>
+import Item from './Item.vue'
+
 export default {
-    
+    props: {
+        todoList: Object
+    },
+    components: {
+        Item
+    }
 }
 </script>
 

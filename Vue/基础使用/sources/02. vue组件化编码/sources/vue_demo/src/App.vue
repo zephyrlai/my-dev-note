@@ -3,7 +3,7 @@
         <div class="todo-container">
             <div class="todo-wrap">
                 <Header/>
-                <Items/>
+                <Items :todoList='todoList'/>
                 <Footer/>
             </div>
         </div>
@@ -21,6 +21,15 @@ export default {
         Items,
         Header,
         Footer
+    },
+    data() {
+        return {
+            todoList: [
+                {title:"吃饭",flag:false},
+                {title:"睡觉",flag:false},
+                {title:"打豆豆",flag:true}
+            ]
+        }
     } 
 }
 </script>
