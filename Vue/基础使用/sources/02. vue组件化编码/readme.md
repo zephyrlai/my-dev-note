@@ -118,4 +118,45 @@
         ```
     1. .eslintignore: 指令检查忽略的文件 *.js *.vue
 ### 4. 
+
+### 附：补充知识点：
+1. JavaScript Array filter() 方法
+    1. 定义：filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+    1. filter() 不会对空数组进行检测；
+    1. filter() 不会改变原始数组。
+    1. 参考代码：
+        ``` js
+        var ages = [32, 33, 16, 40];
+        function checkAdult(age) {
+            return age >= 18;
+        }
+        function myFunction() {
+            document.getElementById("demo").innerHTML = ages.filter(checkAdult);
+        }
+        ```
+    1. 效果：  
+        ![](images/vue-ps-01.png)
+1. JavaScript forEach() 方法
+    1. forEach() 方法用于调用数组的每个元素，并将元素传递给回调函数。
+    1. forEach() 对于空数组是不会执行回调函数的。
+    1. 参考代码：   
+        ``` html
+        <button onclick="numbers.forEach(myFunction)">点我</button>
+        <p id="demo"></p>
+        
+        <script>
+        demoP = document.getElementById("demo");
+        var numbers = [4, 9, 16, 25];
+        
+        function myFunction(item, index) {
+            demoP.innerHTML = demoP.innerHTML + "index[" + index + "]: " + item + "<br>"; 
+        }
+        </script>
+        ```  
+    1. 效果：
+        ![](images/vue-ps-02.png)
+> https://www.runoob.com/jsref/jsref-obj-array.html
+
+
+
           

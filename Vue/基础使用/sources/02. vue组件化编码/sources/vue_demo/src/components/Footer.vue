@@ -1,10 +1,10 @@
 <template>
       <div class="todo-footer">
         <label>
-          <input type="checkbox"/>
+          <input type="checkbox" v-model="selectAllFlag"/>
         </label>
         <span>
-          <span>已完成0</span> / 全部2
+          <span>已完成{{calComplete}}</span> / 全部{{todoList.length}}
         </span>
         <button class="btn btn-danger">清除已完成任务</button>
       </div>
@@ -12,7 +12,21 @@
 
 <script>
 export default {
-    
+    props: {
+        todoList: Array,
+        deleteCheckedItems: Function,
+        selectAllItems: Function,
+    },
+    computed: {
+        calComplete(){
+            return this.todoList.reduce((preTotal,todo) => preTotal + (todo.flag?1:0),0);
+        },
+        selectAllFlag() {
+            if(this.todoList.length === 0)
+                return false;
+            return this.todoList.length === this.calComplete;
+        }
+    },
 }
 </script>
 
