@@ -2,8 +2,8 @@
     <div id="root">
         <div class="todo-container">
             <div class="todo-wrap">
-                <Header/>
-                <Items :todoList='todoList'/>
+                <Header :addItem ='addItem'/>
+                <Items :todoList='todoList' :deleteItem='deleteItem'/>
                 <Footer/>
             </div>
         </div>
@@ -30,7 +30,15 @@ export default {
                 {title:"打豆豆",flag:true}
             ]
         }
-    } 
+    },
+    methods: {
+        addItem(todo){
+            this.todoList.unshift(todo);
+        },
+        deleteItem(index){
+            this.todoList.splice(index,1);
+        }
+    },
 }
 </script>
 

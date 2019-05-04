@@ -1,6 +1,6 @@
 <template>
       <ul class="todo-main">
-        <Item v-for="(item,index) in todoList" :key='index' :item='item' :index:='index'/>
+        <Item v-for="(item,index) in todoList" :key='index' :item='item' :index:='index' :deleteItem='deleteItem'/>
       </ul>
 </template>
 
@@ -9,7 +9,8 @@ import Item from './Item.vue'
 
 export default {
     props: {
-        todoList: Object
+        todoList: Array,
+        deleteItem: Function
     },
     components: {
         Item

@@ -1,12 +1,35 @@
 <template>
       <div class="todo-header">
-        <input type="text" placeholder="请输入你的任务名称，按回车键确认"/>
+        <input type="text" placeholder="请输入你的任务名称，按回车键确认" v-model='title' @keyup.enter="handleEnter"/>
       </div>
 </template>
 
 <script>
 export default {
-    
+    props: {
+        addItem:Function,
+    },
+    data() {
+        return {
+            title: ''
+        }
+    },
+    methods: {
+        handleEnter(){
+            let title = this.title;
+            let todoItem ={
+                title,flag:false
+            }
+            // 判空
+            if(!todoItem){
+                alert("任务不能为空");
+                return;
+            }
+            // 添加到数组
+            this.addItem(todoItem);
+
+        }
+    },
 }
 </script>
 
