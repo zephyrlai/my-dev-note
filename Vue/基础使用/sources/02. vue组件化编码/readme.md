@@ -117,7 +117,33 @@
             newVue({ el:'body', components:{App} })
         ```
     1. .eslintignore: 指令检查忽略的文件 *.js *.vue
-### 4. 
+### 4. 案例一：交互评论页面
+1. 代码文件层次：  
+    ![](images/vue21.png)  
+1. 效果图：
+    ![](images/vue22.png)
+1. 文件依赖关系图示：  
+    ![](images/vue23.png)  
+1. 参考代码详见```vue-demo```文件夹下```src-comments```、```static-comments```
+1. 效果：  
+    ![](images/vue24.gif)
+
+### 5. 案例二：交互待办页面
+1. 代码文件层次：  
+    |-- components : 子组件所在文件夹
+        |-- Footer.vue : 功能区底部
+        |-- Header.vue ：功能区头部
+        |-- Item.vue ：单个待办实体
+        |-- Items.vue ：待办列表
+    |-- App.vue ：总入口
+    |-- main.js : 将App.vue引入index.html
+1. 效果图： 
+    ![](images/vue26.png)  
+1. 文件依赖关系：  
+    ![](images/vue27.png)
+1. 参考代码详见```vue-demo```文件夹下```src```、```static```
+1. 效果：  
+    ![](images/vue25.gif)
 
 ### 附：补充知识点：
 1. JavaScript Array filter() 方法
