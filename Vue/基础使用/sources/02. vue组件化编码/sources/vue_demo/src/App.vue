@@ -4,7 +4,7 @@
             <div class="todo-wrap">
                 <Header :addItem ='addItem'/>
                 <Items :todoList='todoList' :deleteItem='deleteItem'/>
-                <Footer :todoList='todoList'/>
+                <Footer :todoList='todoList' :selectAllItems='selectAllItems' :deleteCheckedItems='deleteCheckedItems'/>
             </div>
         </div>
     </div>
@@ -37,6 +37,14 @@ export default {
         },
         deleteItem(index){
             this.todoList.splice(index,1);
+        },
+        selectAllItems(value){
+            this.todoList.forEach(element => {
+                element.flag=value
+            });
+        },
+        deleteCheckedItems(){
+            this.todoList = this.todoList.filter(item => item.flag===false);
         }
     },
 }
