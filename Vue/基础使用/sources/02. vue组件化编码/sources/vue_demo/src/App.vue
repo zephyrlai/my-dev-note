@@ -24,11 +24,23 @@ export default {
     },
     data() {
         return {
-            todoList: [
+            // 初始赋值
+           /*  todoList: [
                 {title:"吃饭",flag:false},
                 {title:"睡觉",flag:false},
                 {title:"打豆豆",flag:true}
-            ]
+            ] */
+            // 从localStroage中读取
+            todoList: JSON.parse(window.localStorage.getItem("todoList") || '[]'),
+        }
+    },
+    // 深度监视
+    watch: {
+        todoList:{
+            deep: true,
+            handler: function(value){
+                window.localStorage.setItem("todoList",JSON.stringify(value))
+            }
         }
     },
     methods: {
