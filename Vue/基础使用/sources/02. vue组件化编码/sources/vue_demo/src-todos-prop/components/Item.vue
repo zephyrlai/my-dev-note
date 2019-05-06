@@ -10,7 +10,6 @@
 
 <script>
 
-import PubSub from 'pubsub-js'
 export default {
     props: {
         'Item': Object,
@@ -36,8 +35,7 @@ export default {
         deleteTodo(index) {
             const item = this.Item
             if(window.confirm('确认删除'+item.title+'？'))
-                // this.deleteItem(index);
-                PubSub.publish('deleteItem',index);
+                this.deleteItem(index);
         }
     }
 }

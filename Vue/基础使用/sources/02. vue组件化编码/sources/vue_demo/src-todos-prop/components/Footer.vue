@@ -1,21 +1,18 @@
 <template>
       <div class="todo-footer">
         <label>
-          <!-- <input type="checkbox" v-model="selectAllFlag" /> -->
-          <slot name='checkbox'></slot>
+          <input type="checkbox" v-model="selectAllFlag" />
         </label>
         <span>
-          <!-- <span>已完成{{calComplete}} / 全部{{todoList.length}}</span> -->
-          <slot name='complete'></slot>
+          <span>已完成{{calComplete}}</span> / 全部{{todoList.length}}
         </span>
-          <!-- <button class="btn btn-danger" v-show="calComplete>0" @click='deleteCheckedItems'>清除已完成任务</button> -->
-          <slot name='delete'></slot>
+        <button class="btn btn-danger" v-show="calComplete>0" @click='deleteCheckedItems'>清除已完成任务</button>
       </div>
 </template>
 
 <script>
 export default {
-    /* props: {
+    props: {
         todoList: Array,
         deleteCheckedItems: Function,
         selectAllItems: Function,
@@ -35,7 +32,7 @@ export default {
             }
 
         }
-    } */
+    }
 }
 </script>
 

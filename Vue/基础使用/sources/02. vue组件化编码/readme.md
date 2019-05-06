@@ -145,6 +145,87 @@
 1. 效果：  
     ![](images/vue25.gif)
 
+### 6. 组件之间通信
+1. 方式一：props
+    1. 使用组件标签时
+        ``` html
+        <my-component name='tom' :age='3' :set-name='setName'></my-component>
+        ```
+    1. 定义 MyComponent 时
+        1. 在组件内声明所有的 props
+        1. 方式一: 只指定名称   
+            ```props: ['name', 'age', 'setName']```
+        1. 方式二: 指定名称和类型  
+            ``` js
+            props: {
+                name: String,
+                age: Number, setNmae: Function
+            }
+            ```
+        1. 方式三: 指定名称/类型/必要性/默认值  
+            ``` js
+            props: {
+                name: {type: String, required: true, default:xxx},
+            }
+            ```
+    1. 注意：
+        1. 此方式用于父组件向子组件传递数据
+        1. 所有标签属性都会成为组件对象的属性, 模板页面可以直接引用
+        1. 缺陷:
+            1. 如果需要向非子后代传递数据必须多层逐层传递
+            1. 兄弟组件间也不能直接 props 通信, 必须借助父组件才可以
+1. 方式二：自定义事件（监听事件 + 触发事件）
+    1. 2种绑定监听的方式
+        1. ```<Header @addItem ='addItem'/> <!-- 绑定监听方式一 -->```
+        1. 异步绑定：  
+            1. 使用ref属性注册引用信息  
+                ```<Header ref='header'/> <!-- 绑定监听方式二：异步绑定 -->```  
+            1. 在mounted中异步绑定监听
+                ``` js
+                mounted() {
+                    this.$refs.header.$on('addItem',this.addItem);
+                }
+                ```
+    1. 触发事件：
+        ``` js
+        this.$emit('addItem',todoItem);
+        ```
+    1. 注意:
+        1. 此方式只用于子组件向父组件发送消息(数据)
+        1. 问题: 隔代组件或兄弟组件间通信此种方式不合适
+1. 方式三：消息订阅与发布（PubSubJs库）：
+    1. 安装PubSubJs： ```npm install --save pubsub-js```
+    1. 引入依赖：  
+        ```import PubSub from 'pubsub-js'```
+    1. 订阅消息（相当于【绑定事件监听】）:  
+        ```PubSub.subscribe('msg', function(msg, data){})```
+    1. 发布消息（相当于【触发事件】）:  
+        ```PubSub.publish('msg', data)```
+    1. 优点: 此方式可实现任意关系组件间通信(数据)
+1. 方式四：slot 
+    1. 此方式用于父组件向子组件传递`标签数据`
+    1. 子组件：child.vue
+        ``` html
+        <template> 
+            <div>
+                <slot name="xxx">不确定的标签结构 1</slot> 
+                <div>组件确定的标签结构</div>
+                <slot name="yyy">不确定的标签结构 2</slot>
+            </div> 
+        </template>
+        ```
+    1. 父组件：parent.vue
+        ``` html
+        <child>
+            <div slot="xxx">xxx 对应的标签结构</div> 
+            <div slot="yyy">yyyy 对应的标签结构</div>
+        </child>
+        ```
+1. 方式五：vuex（延后）
+
+
+    
+
 ### 附：补充知识点：
 1. JavaScript Array filter() 方法
     1. 定义：filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。

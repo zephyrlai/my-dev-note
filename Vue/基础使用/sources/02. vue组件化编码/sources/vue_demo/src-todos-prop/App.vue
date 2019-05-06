@@ -2,22 +2,15 @@
     <div id="root">
         <div class="todo-container">
             <div class="todo-wrap">
-                <!-- <Header @addItem ='addItem'/> --> <!-- 绑定监听方式一 -->
-                <Header ref='header'/> <!-- 绑定监听方式二：异步绑定 -->
-                <Items :todoList='todoList' />
-                <!-- <Footer :todoList='todoList' :selectAllItems='selectAllItems' :deleteCheckedItems='deleteCheckedItems'/> -->
-                <Footer>
-                    <input type="checkbox" v-model="selectAllFlag" slot='checkbox'/>
-                    <span slot='complete'>已完成{{calComplete}} / 全部{{todoList.length}}</span>
-                    <button class="btn btn-danger" v-show="calComplete>0" @click='deleteCheckedItems' slot='delete'>清除已完成任务</button>
-                </Footer>
+                <Header :addItem ='addItem'/>
+                <Items :todoList='todoList' :deleteItem='deleteItem'/>
+                <Footer :todoList='todoList' :selectAllItems='selectAllItems' :deleteCheckedItems='deleteCheckedItems'/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import PubSub from 'pubsub-js'
 import Items from './components/Items.vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
@@ -39,22 +32,6 @@ export default {
             ] */
             // 从localStroage中读取
             todoList: JSON.parse(window.localStorage.getItem("todoList") || '[]'),
-        }
-    },
-    computed: {
-        calComplete(){
-            return this.todoList.reduce((preTotal,todo) => preTotal + (todo.flag?1:0),0);
-        },
-        selectAllFlag: {
-            get(){
-                if(this.todoList.length === 0)
-                    return false;
-                return this.todoList.length === this.calComplete;
-            },
-            set(value) {
-                this.selectAllItems(value)
-            }
-
         }
     },
     // 深度监视
@@ -81,14 +58,6 @@ export default {
         deleteCheckedItems(){
             this.todoList = this.todoList.filter(item => item.flag===false);
         }
-    },
-    mounted() {
-        this.$refs.header.$on('addItem',this.addItem);
-        // 订阅消息
-        PubSub.subscribe('deleteItem',(msg,index)=>{
-            console.dir(msg);
-            this.deleteItem(index);
-        })
     },
 }
 </script>

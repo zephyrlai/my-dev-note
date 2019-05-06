@@ -7,6 +7,7 @@
 <script>
 export default {
     props: {
+        addItem:Function,
     },
     data() {
         return {
@@ -25,8 +26,7 @@ export default {
                 return;
             }
             // 添加到数组
-            this.$emit('addItem',todoItem);
-            // this.addItem(todoItem);
+            this.addItem(todoItem);
 
         }
     },
