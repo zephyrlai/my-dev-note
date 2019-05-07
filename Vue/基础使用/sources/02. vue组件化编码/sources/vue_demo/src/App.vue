@@ -21,6 +21,7 @@ import PubSub from 'pubsub-js'
 import Items from './components/Items.vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
+import storageUtil from './util/storageUtil'
 
 
 export default {
@@ -38,7 +39,7 @@ export default {
                 {title:"打豆豆",flag:true}
             ] */
             // 从localStroage中读取
-            todoList: JSON.parse(window.localStorage.getItem("todoList") || '[]'),
+            todoList: storageUtil.readArrayFromLocalStorage('todoList'),
         }
     },
     computed: {
@@ -61,9 +62,10 @@ export default {
     watch: {
         todoList:{
             deep: true,
-            handler: function(value){
+            /* handler: function(value){
                 window.localStorage.setItem("todoList",JSON.stringify(value))
-            }
+            } */
+            handler: storageUtil.write2LocalStorage
         }
     },
     methods: {
