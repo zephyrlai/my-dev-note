@@ -268,6 +268,12 @@
         ```
     1. 效果：（同上）
 
+### 8. 案例三：GitHub用户搜索
+1. 思路：search组件中点击搜索按钮发布搜索的消息，main组件订阅搜索的消息，通过ajax请求获取并展示数据
+1. 参考代码：主要代码位于```src```文件夹下
+1. 效果 ：  
+    ![](images/vue29.gif)
+
 
     
 
@@ -307,6 +313,23 @@
         ```  
     1. 效果：
         ![](images/vue-ps-02.png)
+1. JavaScript Array map() 方法
+    1. map() 方法返回一个新数组，数组中的元素为原始数组元素调用函数处理后的值。
+    1. map() 方法按照原始数组元素顺序依次处理元素。
+    1. 注意： 
+        1. map() 不会对空数组进行检测。
+        1. map() 不会改变原始数组。
+    1. 参考代码：  
+        ``` js
+        var numbers = [4, 9, 16, 25];
+
+        function myFunction() {
+            x = document.getElementById("demo")
+            x.innerHTML = numbers.map(Math.sqrt);
+        }
+        ```
+    1. 效果：  
+        ![](images/vue30.png)
 > https://www.runoob.com/jsref/jsref-obj-array.html
 
 
