@@ -7,7 +7,6 @@
 
 <script>
 
-    import axios from 'axios'
     export default{
         data() {
             return {
@@ -17,14 +16,17 @@
         },
         mounted() {
             let reqUrl = 'https://api.github.com/search/repositories?q=vue&sort=start';
-            axios.get(reqUrl).then(response => {
-                const result = response.data;
-                const targetRepo = result.items[0];
-                this.repoUrl = targetRepo.html_url;
-                this.repoName = targetRepo.name;
-            }).catch(error => {
-                alert("请求失败！")
-            })
+            this.$http.get(reqUrl).then(
+                response =>{
+                    const result = response.data;
+                    const targetRepo = result.items[0];
+                    this.repoUrl = targetRepo.html_url;
+                    this.repoName = targetRepo.name;
+                },
+                response => {
+                    alert("请求失败！")
+                }
+            )
         },
     }
 </script>
