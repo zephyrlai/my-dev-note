@@ -1,18 +1,27 @@
 <template>
-    <div class="container">
-        <Search/>
-        <UserMain/>
+    <div>
+        <a-button type="primary" @click='handleClick'>ant-design-vue</a-button>
     </div>
 </template>
 
 <script>
-    import Main from './components/Main.vue'
-    import Search from './components/Search.vue'
+    // notification
+    import { notification } from 'ant-design-vue'
     export default{
-        components: {
-            'UserMain': Main,
-            Search
-        }
+        methods: {
+            handleClick(){
+               this.$notification.open({
+                message: '通知通知',
+                description: '心心念念的Ant Design Vue.',
+                duration: 2,
+                onClose: 'close',
+                icon: <a-icon type="smile" style="color: #108ee9" />,
+                /* onClick: () => {
+                        this.$notification.close('demoNotify')
+                    }, */
+                });
+            }
+        },
     }
 </script>
 

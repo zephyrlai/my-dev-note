@@ -8,10 +8,13 @@
     }],
     "stage-2"
   ],
-  "plugins": ["transform-vue-jsx", "transform-runtime",["component", [
-    { 
-      "libraryName": "mint-ui", 
-      "style": true 
-    }
-  ]]]
+  "plugins": ["transform-vue-jsx", "transform-runtime",
+    // ["component", [
+    //   { 
+    //     "libraryName": "mint-ui", 
+    //     "style": true 
+    //   }
+    // ]],
+    ["import", { "libraryName": "ant-design-vue", "libraryDirectory": "es", "style": "css" }] // `style: true` 会加载 less 文件
+  ]
 }
