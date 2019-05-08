@@ -17,6 +17,7 @@ export default new VueRouter({
             path: '/home',
             component: Home
         },
+        // 访问默认路径时，重定向到about
         {
             path: '/',
             redirect: 'about'
