@@ -1,6 +1,6 @@
 
 import Vue from 'vue'
-import { Button,Icon,notification } from 'ant-design-vue'
+import { Button, Icon, notification } from 'ant-design-vue'
 import App from './App.vue'
 
 Vue.config.productionTip = false

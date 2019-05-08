@@ -5,23 +5,18 @@
 </template>
 
 <script>
-    // notification
-    import { notification } from 'ant-design-vue'
     export default{
         methods: {
-            handleClick(){
+            handleClick() {
                this.$notification.open({
                 message: '通知通知',
                 description: '心心念念的Ant Design Vue.',
                 duration: 2,
                 onClose: 'close',
-                icon: <a-icon type="smile" style="color: #108ee9" />,
-                /* onClick: () => {
-                        this.$notification.close('demoNotify')
-                    }, */
-                });
+                icon: <a-icon type="smile" style="color: #108ee9" />
+                })
             }
-        },
+        }
     }
 </script>
 
