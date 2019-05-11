@@ -1,5 +1,7 @@
 <template>
-    <div>About Page</div>
+    <div>
+            About Page
+        <input type="text" value=''/></div>
 </template>
 
 <script>

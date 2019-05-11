@@ -14,7 +14,9 @@
                 </div>
             </div>
             <div class="col-xs-6">
-                <router-view ></router-view>
+                <keep-alive>
+                    <router-view></router-view>
+                </keep-alive>
             </div>
         </div>
     </div>
