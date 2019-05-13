@@ -1,6 +1,7 @@
 
 import Vue from 'vue'
 import App from './App.vue'
+import store from './index'
 
 /* eslint-disable no-new */
 new Vue({
@@ -8,5 +9,6 @@ new Vue({
   components: {
     App
   },
-  template: '<App/>'
+  template: '<App/>',
+  store
 })

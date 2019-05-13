@@ -6,8 +6,6 @@
 
 <script>
 export default {
-    props: {
-    },
     data() {
         return {
             title: ''
@@ -20,13 +18,14 @@ export default {
                 title,flag:false
             }
             // 判空
-            if(!todoItem){
+            if(!todoItem.title){
                 alert("任务不能为空");
                 return;
             }
             // 添加到数组
-            this.$emit('addItem',todoItem);
             // this.addItem(todoItem);
+            this.$store.dispatch('add_item',todoItem);
+            this.title= '';
 
         }
     },
