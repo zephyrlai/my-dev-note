@@ -1,14 +1,22 @@
 <template>
     <div>
-         <p>当前数字：{{$store.state.num}}，是{{evenOrOdd}}</p>
+         <p>当前数字：{{num}}，是{{evenOrOdd}}</p>
          <p></p>
          <button @click='myClick'>+1</button>
     </div>
 </template>
 
 <script>
+  import {mapState,mapActions,mapGetters} from 'vuex'
     export default{
-        methods: {
+      computed: {
+        ...mapGetters(['evenOrOdd']),
+        ...mapState(['num']),
+      },
+      methods: {
+        ...mapActions({myClick:'increase'})
+      }
+        /* methods: {
             myClick() {
                 this.$store.dispatch('increase')
             }
@@ -17,7 +25,7 @@
           evenOrOdd() {
             return this.$store.getters.evenOrOdd
           }
-        },
+        }, */
     }
 </script>
 
