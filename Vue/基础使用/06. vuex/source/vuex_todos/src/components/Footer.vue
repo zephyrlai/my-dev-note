@@ -1,20 +1,29 @@
 <template>
       <div class="todo-footer">
-        <label>
-          <!-- <input type="checkbox" v-model="selectAllFlag" /> -->
-          <slot name='checkbox'></slot>
-        </label>
-        <span>
-          <!-- <span>已完成{{calComplete}} / 全部{{todoList.length}}</span> -->
-          <slot name='complete'></slot>
-        </span>
-          <!-- <button class="btn btn-danger" v-show="calComplete>0" @click='deleteCheckedItems'>清除已完成任务</button> -->
-          <slot name='delete'></slot>
+          <input type="checkbox" v-model="selectAllFlag" /> 
+          <span>已完成{{completedSize}} / 全部{{totalSize}}</span>
+          <button class="btn btn-danger" v-show="completedSize>0" @click='deleteCheckedItems'>清除已完成任务</button>
       </div>
 </template>
 
 <script>
+import {mapGetters, mapActions} from 'vuex'
+
 export default {
+  computed: {
+    ...mapGetters(['completedSize','totalSize']),
+    selectAllFlag: {
+      get(){
+        return this.$store.getters.selectAllFlag;
+      },
+      set(flag){
+        this.$store.dispatch('selectAll',flag);
+      }
+    }
+  },
+  methods: {
+      ...mapActions(['deleteCheckedItems'])
+  },
     /* props: {
         todoList: Array,
         deleteCheckedItems: Function,
