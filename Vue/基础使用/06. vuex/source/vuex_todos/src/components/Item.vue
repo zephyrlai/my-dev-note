@@ -9,13 +9,13 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 
 import PubSub from 'pubsub-js'
 export default {
     props: {
         'Item': Object,
         'index': Number,
-        'deleteItem': Function
     },
     data() {
         return{
@@ -36,9 +36,10 @@ export default {
         deleteTodo(index) {
             const item = this.Item
             if(window.confirm('确认删除'+item.title+'？'))
-                // this.deleteItem(index);
-                PubSub.publish('deleteItem',index);
-        }
+                // ...mapActions(['deleteItem']) 
+                // 上面的简略形式不可用，因为要传参，所以只能手动触发
+                this.$store.dispatch('deleteItem',index);
+        },
     }
 }
 </script>

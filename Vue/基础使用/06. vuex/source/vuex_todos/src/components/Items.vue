@@ -1,16 +1,17 @@
 <template>
       <ul class="todo-main">
-        <Item v-for="(item,index) in todoList" :key='index' :item='item' :index:='index' :deleteItem='deleteItem'/>
+        <Item v-for="(item,index) in todoList" :key='index' :item='item' :index:='index'/>
       </ul>
 </template>
 
 <script>
+import {mapState,mapActions} from 'vuex'
 import Item from './Item.vue'
 
 export default {
-    props: {
-        todoList: Array,
-        deleteItem: Function
+    computed: {
+        // 注意要放在computed中，而不是放在data中
+        ...mapState(['todoList'])
     },
     components: {
         Item
