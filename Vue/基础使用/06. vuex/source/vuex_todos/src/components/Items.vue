@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import storageUtil from '../util/storageUtil'
 import {mapState,mapActions} from 'vuex'
 import Item from './Item.vue'
 
@@ -15,7 +16,14 @@ export default {
     },
     components: {
         Item
-    }
+    },
+    watch: {
+      // 监视todoList的所有变化
+      todoList: {
+        deep:true, // 深度监视
+        handler: storageUtil.write2LocalStorage // 写入localstorage
+      }
+    },
 }
 </script>
 

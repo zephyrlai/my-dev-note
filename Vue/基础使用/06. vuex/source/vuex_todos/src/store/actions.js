@@ -1,4 +1,5 @@
-import { ADD_ITEM,DEL_ITEM,SELECT_ALL,DELETE_CHECKED_ITEMS } from "./mutation-type";
+import { ADD_ITEM,DEL_ITEM,SELECT_ALL,DELETE_CHECKED_ITEMS,LOAD_TODO_LIST } from "./mutation-type";
+import storageUtil from '../util/storageUtil'
 
 export default{
     // 单条增加
@@ -15,5 +16,10 @@ export default{
     },
     deleteCheckedItems({commit}){
         commit(DELETE_CHECKED_ITEMS);
+    },
+    // 从localstorage中加载todoList
+    readTodoList({commit}){
+        const todos = storageUtil.readArrayFromLocalStorage('todoList')
+        commit(LOAD_TODO_LIST,todos);
     },
 }

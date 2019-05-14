@@ -11,7 +11,7 @@ export default{
         return state.todoList.length;
     },
     // 是否全选（默认传入自身[getters对象]）
-    selectAllFlag(state,getters) {
-        return getters.completedSize === getters.allSize && getters.totalSize>0
+    selectAll(state,getters) {
+        return getters.completedSize === getters.allSize && state.todoList.length>0
     }
 }

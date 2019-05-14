@@ -1,4 +1,4 @@
-import {ADD_ITEM,DEL_ITEM,SELECT_ALL,DELETE_CHECKED_ITEMS} from './mutation-type'
+import {ADD_ITEM,DEL_ITEM,SELECT_ALL,DELETE_CHECKED_ITEMS,LOAD_TODO_LIST} from './mutation-type'
 
 export default{
     // 第一个参数固定是state，自定义参数用对象的形式接受
@@ -16,5 +16,8 @@ export default{
     },
     [DELETE_CHECKED_ITEMS](state) {
         state.todoList = state.todoList.filter((item) => !item.flag)
+    },
+    [LOAD_TODO_LIST] (state,todos) {
+        state.todoList = todos;
     }
 }

@@ -12,9 +12,9 @@ import {mapGetters, mapActions} from 'vuex'
 export default {
   computed: {
     ...mapGetters(['completedSize','totalSize']),
-    selectAllFlag: {
+    selectAllFlag: {// 注意不能与getter中对应的属性同名
       get(){
-        return this.$store.getters.selectAllFlag;
+        return this.$store.getters.selectAll;
       },
       set(flag){
         this.$store.dispatch('selectAll',flag);
@@ -24,27 +24,6 @@ export default {
   methods: {
       ...mapActions(['deleteCheckedItems'])
   },
-    /* props: {
-        todoList: Array,
-        deleteCheckedItems: Function,
-        selectAllItems: Function,
-    },
-    computed: {
-        calComplete(){
-            return this.todoList.reduce((preTotal,todo) => preTotal + (todo.flag?1:0),0);
-        },
-        selectAllFlag: {
-            get(){
-                if(this.todoList.length === 0)
-                    return false;
-                return this.todoList.length === this.calComplete;
-            },
-            set(value) {
-                this.selectAllItems(value)
-            }
-
-        }
-    } */
 }
 </script>
 
