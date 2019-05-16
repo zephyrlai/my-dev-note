@@ -147,6 +147,169 @@
             ```
     1. 效果：  
         ![](images/0110.png) 
+1. 新增评分组件
+    1. 在components下新建star文件夹，里面放评分用到的图片，并新建star.vue
+    1. 根据传递的size统一确定星星的大小，根据传递的score，利用计算属性itemClasses，动态生成所有的星星的class名（实星、半星、空星）  
+        ``` html
+        <template>
+            <div class="star" :class="starType">
+                <span v-for="(itemClass,index) in itemClasses" :class="itemClass" class="star-item" :key="index"></span>
+            </div>
+        </template>
+        <script>
+            const LENGTH = 5    // 星星的总数
+            const CLS_ON = 'on' // 实星
+            const CLS_HALF = 'half' // 半星
+            const CLS_OFF = 'off'   // 空星
+            export default {
+                props: {
+                    size: {
+                        type: Number
+                    },
+                    score: {
+                        type: Number
+                    }
+                },
+                computed: {
+                    // 统一指定星星的大小：48、36、24
+                    starType() {
+                        return 'star-' + this.size
+                    },
+                    itemClasses() {
+                        let result = [];
+                        // 获取整数或者0.5的小数
+                        // 4.1*2=8.2，向下取整得8，8/2=4
+                        // 2.9*2=5.8，向下取整得5，5/2=2.5
+                        const num = Math.floor(this.score*2)/2;
+                        const hasDecimal = num%1 != 0 ;
+                        const intScore = Math.floor(num);
+                        // 放入满星
+                        for (let index = 0; index < intScore; index++) {
+                            result.push(CLS_ON);                
+                        }
+                        // 有半星就放一个半星
+                        if(hasDecimal)
+                            result.push(CLS_HALF);
+                        // 剩余的位置都放空星
+                        while (result.length < LENGTH) {
+                            result.push(CLS_OFF);
+                        }
+                        return result;
+                    }
+                },
+            }
+        </script>
+        <style lang="stylus">
+            @import "~common/stylus/mixin.styl"
+            .star
+                display: flex
+                align-items: center
+                justify-content: center
+                .star-item
+                background-repeat: no-repeat
+                &.star-48
+                .star-item
+                    width: 20px
+                    height: 20px
+                    margin-right: 22px
+                    background-size: 20px 20px
+                    &:last-child
+                    margin-right: 0
+                    &.on
+                    bg-image('star48_on')
+                    &.half
+                    bg-image('star48_half')
+                    &.off
+                    bg-image('star48_off')
+                &.star-36 //...略
+                &.star-24 //...略
+        </style>
+
+        ```
+1. 引用头部的描述模块
+    1. 用到了cube-ui中的createAPI模块
+        1. [官网与文档](https://didi.github.io/cube-ui/#/zh-CN/docs/create-api)
+        1. 思想与优势：原生的alert是通过js调用实现的，createAPI的作用就是可以实现以 API 的形式调用自定义组件，因此全局的遮罩、弹框都可以使用createAPI实现
+        1. 基本使用： 
+            1. 所有通过 createAPI 实现的通过 API 的形式调用的自定义组件（cube-ui 内置的组件）都需要通过 Vue.use 注册才可以。
+            1. createAPI(Vue, Component, [events, single])
+                1. 参数说明：  
+                    __Vue__：Vue 函数  
+                    __Component__：Vue子组件，组件必须有name属性，如果缺失name将会出现报错：  
+                        ![](images/0111.png)       
+                    __events__: 可选参数，组件实例 emit 的事件名集合  
+                    __single__: 可选参数，是否为单例，默认true 
+        1. [方式一]createAPI在普通 js 文件的模板代码： 
+            ``` js
+            import Vue from 'vue'
+            import Hello from './Hello.vue'
+
+            import {
+            createAPI
+            } from 'cube-ui'
+
+            // 创建 this.$createHello and $Hello.create API
+            createAPI(Vue, Hello, ['click'], true)
+
+            Hello.$create(config, renderFn)
+            ```
+        1. [方式二]createAPI通过 Vue.use 注册的模板代码：
+            ``` js
+            import Vue from 'vue'
+            import { Dialog } from 'cube-ui'
+
+            Vue.use(Dialog)
+
+            Dialog.$create({
+            ...
+            })
+            ```
+        1. createAPI该方法在 Vue 的 prototype 上增加一个名为 $create{camelize(Component.name)} 的方法，这样就可以在其他组件中直接通过 const instance = this.$createAaBb(config, [renderFn, single]) 这样来实例化组件了，而且这个实例化组件的元素是被附加到 body 元素下的。调用示意：  
+            ``` js
+            const instance = this.$createAaBb(config, renderFn, single)
+            ```
+        1. createAPI的$createAaBb方法需要2个参数$prop(传递给组件的 Props)与$event(可选,组件的 Events 事件回调)
+            1. $props 示例，约定结构 { [key]: [propKey] }  __（注意体会为什么写作'propKey',而不写作'propValue'）__： 
+                ``` js
+                {
+                    title: 'title',
+                    content: 'my content',
+                    open: false
+                }
+                ```
+            1. title、content、open 就是传递给组件的 Prop 的 key，而对应 Prop 的值则按照如下规则获取：
+                1. 如果是非字符串，则直接取配置的 propKey 作为值
+                1. 如果是字符串，且配置的 propKey 不在当前实例上下文属性上，则直接取 propKey 作为值
+                1. __是字符串，且在当前实例上下文属性上，那么直接获取当前实例上下文对应的 propKey 的值，且会监控这个值的变化实时更新到组件实例上__
+    1. src下新建register.js，使用createAPI在HeaderDetail组件中间接添加api调用方法：  
+        ``` js
+        import { createAPI } from 'cube-ui'
+        import Vue from 'vue'
+        import HeaderDetail from 'components/header-detail/header-detail'
+
+        createAPI(Vue, HeaderDetail)
+        ```
+    1. 在main.js中初始化（调用）register.js  
+        ``` js
+        import './register'
+        ```
+    1. vHeader组件中的点击事件()：  
+        ``` js
+        showDetail() {
+            this.headerDetailComponent = this.headerDetailComponent || this.$createHeaderDetail({
+                $props: {
+                    seller: 'seller'
+                }
+            })
+            // 这里的show方法是HeaderDetail组件中通过控制v-show的标志位实现的显示与隐藏
+            this.headerDetailComponent.show()
+        }
+        ```
+    1. 效果：  
+        ![](images/0112.gif)
+
+            
+
 
 ## 三、Tab 组件开发
 
@@ -157,3 +320,9 @@
 ## 六、评价和商家页面开发
 
 ## 七、打包构建和项目部署
+
+## 附：补充知识点：
+1. Math.floor() 返回小于或等于一个给定数字的最大整数。
+
+## 源码仓库：  
+https://github.com/zephyrlai/zephyr-eleme
