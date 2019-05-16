@@ -30,7 +30,7 @@
     1. 再次运行项目：  
         ![](images/0101.png)
 
-## 二、头部组件开发
+## 二、头部组件开发（对应分支：ch2）
 1. 引入静态header组件
     1. 在public目录下的index.html文件中mate下加入视口限制：禁止缩放:  
         ``` html
@@ -312,6 +312,95 @@
 
 
 ## 三、Tab 组件开发
+1. 实现思路：tab栏使用了cube-ui的tab-bar组件，而主页面则采用了轮播组件
+1. tab组件基础实现：
+    1. 新建seller、goods、ratings、tab组件，并将前三个组件引入tab组件
+    1. 在VHeader组件中引入tab组件
+    1. tab组件：  
+        ``` html
+        <template>
+            <div class='tab'>
+                <cube-tab-bar
+                    :showSlider=true 
+                    v-model="selectedLabel" 
+                    :data="tabs"
+                    ref="tabBar"
+                    class="border-bottom-1px">
+                </cube-tab-bar>
+                <div class="slide-wapper">
+                    <cube-slide
+                        :loop=false
+                        :auto-play=false
+                        :show-dots=false
+                        :initial-index="index"
+                        ref="slide">
+                        <cube-slide-item>
+                            <goods></goods>
+                        </cube-slide-item>
+                        <cube-slide-item>
+                            <seller></seller>
+                        </cube-slide-item>
+                        <cube-slide-item>
+                            <ratings></ratings>
+                        </cube-slide-item>
+                    </cube-slide>
+                </div>
+            </div>
+        </template>
+
+        <script>
+        import Goods from 'components/goods/goods'
+        import Seller from 'components/seller/seller'
+        import Ratings from 'components/ratings/ratings'
+
+        export default {
+            name: 'tab',
+            data() {
+                return {
+                    index: 0,
+                    tabs: [{label:'商品'},{label:'评价'},{label:'商家'}]
+                }
+            },
+            computed: {
+                selectedLabel: {
+                    get() {
+                        return this.tabs[this.index].label;
+                    },
+                    set(value) {
+                        this.index = this.tabs.findIndex(item => {
+                            return value === item.label
+                        })
+                    }
+                }
+            },  
+            components: {
+                Goods,
+                Seller,
+                Ratings
+            }
+        }
+        </script>
+
+        <style lang="stylus" scoped>
+            @import "~common/stylus/variable"
+            .tab
+                display: flex
+                flex-direction: column
+                height: 100%
+                >>> .cube-tab
+                padding: 10px 0
+                .slide-wrapper
+                flex: 1
+                overflow: hidden
+        </style>
+        ```
+    1. 在theme.styl中引入/common/stylus/variable.styl，并将最后的tab类样式变量修改如下：  
+        ``` 
+        $tab-active-color = $color-red
+        $tab-slider-bgc = $color-red
+        ```
+    1. 效果：  
+        ![](images/0401.gif)
 
 ## 四、商品页面开发
 
@@ -323,6 +412,19 @@
 
 ## 附：补充知识点：
 1. Math.floor() 返回小于或等于一个给定数字的最大整数。
+1. findIndex()方法返回数组中满足提供的测试函数的第一个元素的索引
+    ``` js
+    var array1 = [5, 12, 8, 130, 44];
+
+    function isLargeNumber(element) {
+        return element > 13;
+    }
+
+    console.log(array1.findIndex(isLargeNumber));
+    // expected output: 3
+    ```
+1. Vue scoped CSS 与深度作用选择器
+    1. 使用 scoped 后，父组件的样式将不会渗透到子组件中。
 
 ## 源码仓库：  
 https://github.com/zephyrlai/zephyr-eleme
