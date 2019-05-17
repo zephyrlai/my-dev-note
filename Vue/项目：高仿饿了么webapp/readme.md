@@ -398,6 +398,39 @@
         ```
     1. 效果：  
         ![](images/0401.gif)
+1. tab组件上下联动
+    1. 代码思路：根据当前轮播图在全部轮播图并排排列视角下的位置比例，实时动态计算并更改tabBar下划线的位置，实现如丝般顺滑的效果
+    1. 在tab.vue的data中添加滑动的[选项参数](https://didi.github.io/cube-ui/#/zh-CN/docs/scroll#cube-Props%E9%85%8D%E7%BD%AE-anchor)(开启滚动监听、[实时触发scroll事件](https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/options.html#probetype)、[设定判别滚动方向的阈值](https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/options.html#directionlockthreshold)：  
+        ``` 
+        scrollOptions: {
+            listenScroll: true,
+            probeType: 3,
+            diretionLockThreshold: 0
+        }
+        ```
+    1. 在cube-slide标签中添加cube-ui的option属性、绑定scroll方法：
+        ```
+            @scroll="onScroll"
+            :options = 'scrollOptions'
+        ```
+    1. cube-ui的tabBar组件对外提供了setSliderTransform方法，可以手动调整tabBar下划线的位置
+    1.添加onScroll、onChange方法：  
+        ``` js
+        onScroll(pos) {
+            // console.log(pos.x)
+            // 获取tarBar的宽度（红色下边框的宽度）
+            const tarBarWidth = this.$refs.tabBar.$el.clientWidth
+            // 获取slide的宽度(全部轮播图并排排列的宽度)
+            const slideWidth = this.$refs.slide.slide.scrollerWidth
+            const slideLocation = -pos.x/slideWidth * tarBarWidth
+            this.$refs.tabBar.setSliderTransform(slideLocation)
+        },
+        onChange(current) {
+            this.index = current
+        }
+        ```
+    1. 效果：  
+        ![](images/0402.gif)
 1. tab组件抽象与封装
     1. 为什么要抽象：tabBar与对应的页面（vue组件）可能会发生改变，抽象后的需求改动，只需要重新引入新的vue组件即可，而不需要更改TabBar
     1. 在App.vue中引入页面组件，并向tab标签传递如下tabs对象(注意：名称属性的名字必须叫‘label’，因为cube-ui的tabBar组件解析的时候是解析数据数组中每个对象的label属性)(tabs数组目前写死，以后可以通过后端接口传递)： 
