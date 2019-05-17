@@ -308,10 +308,7 @@
     1. 效果：  
         ![](images/0112.gif)
 
-            
-
-
-## 三、Tab 组件开发
+## 三、Tab 组件开发（对应分支：ch3）
 1. 实现思路：tab栏使用了cube-ui的tab-bar组件，而主页面则采用了轮播组件
 1. tab组件基础实现：
     1. 新建seller、goods、ratings、tab组件，并将前三个组件引入tab组件
@@ -401,6 +398,39 @@
         ```
     1. 效果：  
         ![](images/0401.gif)
+1. tab组件抽象与封装
+    1. 为什么要抽象：tabBar与对应的页面（vue组件）可能会发生改变，抽象后的需求改动，只需要重新引入新的vue组件即可，而不需要更改TabBar
+    1. 在App.vue中引入页面组件，并向tab标签传递如下tabs对象(注意：名称属性的名字必须叫‘label’，因为cube-ui的tabBar组件解析的时候是解析数据数组中每个对象的label属性)(tabs数组目前写死，以后可以通过后端接口传递)： 
+        ```
+        import Goods from "components/goods/goods";
+        import Seller from "components/seller/seller";
+        import Ratings from "components/ratings/ratings";
+        ``` 
+        ``` 
+            { label: "商品", component: Goods },
+            { label: "评价", component: Ratings },
+            { label: "商家", component: Seller }
+        ```
+    1. 将tab.vue中的goods、seller、ratings组件移除，接收tabs数组，并将cube-slide-item改为遍历并借助与vue的component标签动态渲染组件的形式：  
+        ``` js
+        // 接收数组
+        props: {
+            tabs:{
+                type:Array,
+                default(){
+                    return {}
+                }
+            },
+            // ...
+        }
+        ```
+        ``` html
+        <cube-slide-item v-for="(tab, index) in tabs" :key="index">
+            <component :is="tab.component"></component>
+        </cube-slide-item>
+        ```
+    1. 效果（无变化，图略）
+    
 
 ## 四、商品页面开发
 
