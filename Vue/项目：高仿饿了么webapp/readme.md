@@ -466,6 +466,32 @@
     
 
 ## 四、商品页面开发
+1. scroll-nav组件应用（[cube-ui](https://didi.github.io/cube-ui/#/zh-CN/docs/scroll-nav)）
+    1. 在/src/api/index.js下封装模拟远程请求获取商品数据的接口
+        ``` js
+        const getSellers = myGet('api/seller')
+        const getGoods = myGet('api/goods')
+
+        export {
+            getSellers
+            getGoods
+        }
+        ```
+    1. 在goods组件中引入静态页面资源，主体结构如下： 
+        ``` html
+        <div class="goods">
+         <div class="scroll-nav-wrapper" >
+            <cube-scroll-nav>
+             <cube-scroll-nav-panel v-for='xx'> 
+                <!-- 左侧类别遍历以及展示 -->
+                <ul>
+                    <!-- 右侧每个类别的商品遍历以及展示 -->
+                    <li v-for=''>
+                        <div>...单个商品实体...</div>
+                    </li>
+                </ul>
+        ```
+1. shop-cart(购物车)组件
 
 ## 五、商品详情页开发
 
