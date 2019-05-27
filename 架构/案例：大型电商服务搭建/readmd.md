@@ -133,7 +133,7 @@
             ![](images/0209.png)
         1. AOF的rewrite流程：  
             ![](images/0210.png)
-1. 企业级数据备份与数据恢复的容灾演练
+1. 企业级数据备份与数据恢复的容灾演练  
     1. 持久化方案： RDB、AOF同时打开，RDB的复写频率与AOF的rewrite频率使用redis的默认配置即可，也可以根据实际需要进行调整，AOF的fsync频率建议使用everysec；
     1. 数据备份方案：  
         1. 写 __crontab__ 定时调度脚本去做数据备份  
@@ -174,3 +174,30 @@
             1. 此时可以看到数据可以取到，且aof文件正常
         1. 如果当前机器上的所有RDB文件全部损坏，那么从远程的云服务上拉取最新的RDB快照回来恢复数据
         1. 如果是发现有重大的数据错误，比如某个小时上线的程序一下子将数据全部污染了，数据全错了，那么可以选择某个更早的时间点，对数据进行恢复
+
+### 3. redis读写分离
+1. 概述：  
+    1. 为什么要用redis读写分离：单机情况下redis能承受大约2万的QPS（具体数据因机器配置与业务场景而异），如果想要承接更高数值的QPS（10万以上），则需要用到读写分离的redis集群。
+    1. 读写分离的原理：对于缓存而言，读的需求量是远大于写的需求量的，而读写分离的机制就是在主机上执行写操作，然后异步地将数据复制到从机上，而从机只负责读操作，假设一台从机具有2万QPS，当业务场景需要10万的QPS时，只需要横向扩展5台redis从机即可（可支持水平扩展的读高并发架构）：  
+        ![](images/0301.png)  
+    1. 如果采用了主从架构，那么建议必须开启master node的持久化！
+    1. redis replication的核心机制
+        1. redis采用异步方式复制数据到slave节点，不过redis 2.8开始，slave node会周期性地确认自己每次复制的数据量
+        1. 一个master node是可以配置多个slave node的
+        1. slave node也可以连接其他的slave node
+        1. slave node做复制的时候，是不会block master node的正常工作的
+        1. slave node在做复制的时候，也不会block对自己的查询操作，它会用旧的数据集来提供服务; 但是复制完成的时候，需要删除旧数据集，加载新数据集，这个时候就会暂停对外服务了
+        1. slave node主要用来进行横向扩容，做读写分离，扩容的slave node可以提高读的吞吐量
+    1. 主从架构的核心原理
+        1. 当启动一个slave node的时候，它会发送一个PSYNC命令给master node。开始主从复制的时候，master会启动一个后台线程，开始生成一份RDB快照文件，同时还会将从客户端收到的所有写命令缓存在内存中。RDB文件生成完毕之后，master会将这个RDB发送给slave，slave会先写入本地磁盘，然后再从本地磁盘加载到内存中。然后master会将内存中缓存的写命令发送给slave，slave也会同步这些数据。slave node如果跟master node有网络故障，断开了连接，会自动重连。master如果发现有多个slave node都来重新连接，仅仅会启动一个rdb save操作，用一份数据服务所有slave node。
+            1. 如果这是slave node重新连接master node，那么master node仅仅会复制给slave部分缺少的数据; 
+            1. 否则如果是slave node第一次连接master node，那么会触发一次full resynchronization。
+            ![](images/0302.png)
+    1. 主从复制的断点续传：从redis 2.8开始，就支持主从复制的断点续传，如果主从复制过程中，网络连接断掉了，那么可以接着上次复制的地方，继续复制下去，而不是从头开始复制一份
+    1. 无磁盘化复制
+        1. master在内存中直接创建rdb，然后发送给slave，不会在自己本地落地磁盘了
+        1. 相关配置：  
+            1. repl-diskless-sync
+            1. repl-diskless-sync-delay，等待一定时长再开始复制，因为要等更多slave重新连接过来
+    1. 过期key处理：slave不会过期key，只会等待master过期key。如果master过期了一个key，或者通过LRU淘汰了一个key，那么会模拟一条del命令发送给slave。
+
