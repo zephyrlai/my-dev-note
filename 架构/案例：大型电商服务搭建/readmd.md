@@ -81,7 +81,41 @@
         1. 效果：  
             ![](images/0104.png)
     1. redis安装（生产环境标准）
-        1. 
+        1. 安装tcl环境：   
+            ``` sh
+            wget http://downloads.sourceforge.net/tcl/tcl8.6.1-src.tar.gz
+            tar -xzvf tcl8.6.1-src.tar.gz
+            cd  /usr/local/tcl8.6.1/unix/
+            ./configure  
+            make && make install
+            ```
+        1. 安装redis： 
+            ``` sh 
+            wget http://download.redis.io/releases/redis-5.0.5.tar.gz
+            tar -zxvf redis-5.0.5.tar.gz
+            cd redis-5.0.5
+            make && make test && make install
+            ```
+        1. 配置redis：
+            1. edis utils目录下，有个redis_init_script脚本，将其拷贝到linux的/etc/init.d目录中，并重命名为redis_6379
+            1. （如果需要更改redis的启动端口，修改redis_6379脚本的第6行的REDISPORT（默认是6379））
+            1. 将redis目录下的配置文件（redis.conf）移动到/etc/redis/6379.conf
+            1. 新建redis的数据（持久化文件）存放目录：/var/redis/6379
+            1. 调整redis.conf的如下配置：  
+                1. daemonize	yes             #让redis以daemon进程运行
+                1. pidfile		/var/run/redis_6379.pid         #设置redis的pid文件位置
+                1. (port		6379)           #设置redis的监听端口号
+                1. dir 		/var/redis/6379	    #设置持久化文件的存储位置
+        1. 设置redis开机启动：  
+            1. 在redis_6379脚本中，最上面，加入两行注释
+                ``` sh
+                # chkconfig:   2345 90 10
+                # description:  Redis is a persistent key-value database
+                ```
+            1. 执行命令：  
+                ``` sh
+                chkconfig redis_6379 on
+                ```
 
 ### 2. redis持久化
 1. 概述：  
@@ -236,4 +270,25 @@
         1. msater就是根据slave发送的psync中的offset来从backlog中获取数据的
     1. heartbeat:主从节点互相都会发送heartbeat信息,master默认每隔10秒发送一次heartbeat，salve node每隔1秒发送一个heartbeat
     1. 异步复制:master每次接收到写命令之后，现在内部写入数据，然后异步发送给slave node
+1. 部署redis的读写分离架构：  
+    1. （完成redis的单机安装与部署）
+    1. 修改redis.conf(6379.conf):  
+        ``` sh
+        bind 192.168.0.112
+        # 据说是外国的猿们请愿master-slave的说法涉嫌种族歧视，
+        # 于是redis5.0中众多涉及到slave的名词都改成了replica
+        # 开源不宜，也是醉了
+        slaveof 192.168.1.1 6379
+        # redis 5.0 对应的配置项：replicaof 
+        slave-read-only yes # 默认开启，会拒绝所有的写操作，强制搭建成读写分离的架构
+        # redis 5.0对应的配置项： replica-read-only
+        ```
+    1. 修改主机的redis.conf(6379.conf):  
+        ``` sh
+        bind 192.168.0.111
+        ```
+    1. 主机效果：  
+        ![](images/0305.png)  
+    1. 从机效果：
+        ![](images/0306.png)
 
