@@ -345,4 +345,50 @@
         1. 如果第一个选举出的哨兵切换失败了，那么其他哨兵，会等待```failover-timeout```时间，然后接替刚才执行切换失败的哨兵，继续执行切换，此时会重新获取一个新的configuration epoch，作为新的version号
     1. configuraiton传播（在哨兵中的传播）
         1. 哨兵完成切换之后，会在自己本地更新生成最新的master配置，然后同步给其他的哨兵（通过redis的pub/sub消息机制）。这里之前的version号就很重要了，因为各种消息都是通过一个channel去发布和监听的，所以一个哨兵完成一次新的切换之后，新的master配置是跟着新的version号的。其他的哨兵都是根据版本号（是否与自己当前记录的版本号一致）来更新自己的master配置的
-
+1. 实战演练：搭建三节点的哨兵集群（生产级别）
+    1. 环境概况：基于一主三从的redis集群，准备在三个从节点上配置并启动哨兵服务
+    1. redis服务启动情况：启动了一个主节点与一个从节点的redis服务，另外2个从节点的redis服务未启动
+    1. 在三个从节点上配置并启动哨兵服务
+        1. 将redis目录下的sentinel.conf移动至/etc/sentinel，并重命名为5000.conf（即：```/etc/sentinel/5000.conf```）
+        1. 更改```/etc/sentinel/5000.conf```的如下配置
+            ``` sh
+            # 端口号
+            port 5000
+            # 本机ip方式访问
+            bind 192.168.0.112
+            # 数据文件目录（对应文件夹要手动创建）
+            dir /var/sentinel/5000
+            # sentinel monitor master-group-name master-hostname master-port quorum
+            sentinel monitor mymaster 192.168.0.111 6379 2
+            # 含义：超过多少毫秒跟一个redis实例断了连接，哨兵就可能认为这个redis实例宕机（不改动，采用默认值）
+            sentinel down-after-milliseconds mymaster 30000
+            # 含义：新的master别切换之后，同时有多少个slave被切换至新master，重新做同步，数字越低，花费的时间越多（不改动，采用默认值）
+            sentinel parallel-syncs mymaster 1
+            # 含义：执行故障转移的timeout超时时长（超时了就换个哨兵重新执行故障转移。不改动，采用默认值）
+            sentinel failover-timeout mymaster 180000
+            ```
+        1. 创建哨兵的数据文件目录：```mkdir -p /var/sentinel/5000```
+        1. 启动哨兵服务
+            1. 方式一： 
+                ``` sh
+                redis-sentinel /etc/sentinal/5000.conf
+                ```
+            1. 方式二：
+                ``` sh
+                redis-server /etc/sentinal/5000.conf --sentinel
+                ```
+    1. 效果：
+        1. 从节点01的哨兵控制台信息：
+            ![](images/0310.png)  
+        1. 从节点02的哨兵控制台信息：
+            ![](images/0311.png)  
+        1. 从节点03的哨兵控制台信息： 
+            ![](images/0312.png)  
+    1. 检查哨兵状态的命令  
+        ``` sh
+        # SENTINEL get-master-addr-by-name mymaster
+        sentinel master mymaster
+        sentinel slaves mymaster
+        sentinel sentinels mymaster
+        ```
+        
