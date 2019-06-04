@@ -291,8 +291,9 @@
         ![](images/0305.png)  
     1. 从机效果：
         ![](images/0306.png)
-1. redis的哨兵架构
-1. redis哨兵主备切换的数据丢失问题
+
+### 4. redis哨兵架构
+1. 主备切换的数据丢失问题
     1. 2种情况导致数据丢失
         1. 异步复制  
             因为master -> slave的复制是异步的，所以可能有部分数据还没复制到slave，master就宕机了，此时这些部分数据就丢失了
@@ -314,4 +315,34 @@
             一旦slave复制数据和ack延时太长，就认为可能master宕机后损失的数据太多了，那么就拒绝写请求，这样可以把master宕机时由于部分数据未同步到slave导致的数据丢失降低的可控范围内
         1. 在脑裂中的作用：     
             如果一个master出现了脑裂，跟其他slave丢了连接，那么上面两个配置可以确保，如果不能继续给指定数量的slave发送数据，而且slave超过10秒没有给自己ack消息，那么就直接拒绝客户端的写请求。这样脑裂后的旧master就不会接受client的新数据，也就避免了后续数据丢失，最多就丢失10秒的数据。
+1. （redis哨兵）工作原理分析
+    1. sdown和odown转换机制
+        1. sdown和odown是两种失败状态：
+            1. sdown是主观宕机（Subject Down），就一个哨兵如果自己觉得master宕机了，那么就是主观宕机
+            1. odown是客观宕机（Object Down），如果quorum数量的哨兵都觉得一个master宕机了，那么就是客观宕机
+        1. sdown达成的条件：如果一个哨兵ping一个master，超过了is-master-down-after-milliseconds指定的毫秒数之后，就主观认为master宕机
+        1. sdown到odown转换的条件：如果一个哨兵在指定时间内，收到了quorum指定数量的其他哨兵也认为那个master是sdown了，那么就认为是odown了
+    1. 哨兵集群的自动发现机制
+        1. 哨兵互相之间的发现，是通过redis的pub/sub系统实现的，每隔两秒钟，每个哨兵都会往自己监控的某个master+slaves集群对应的__sentinel__:hello channel里发送一个消息，内容是自己的host、ip和runid还有对这个master的监控配置，
+        1. 每个哨兵也会去监听自己监控的每个master+slaves对应的__sentinel__:hello channel，然后去感知到同样在监听这个master+slaves的其他哨兵的存在
+        1. 每个哨兵还会跟其他哨兵交换对master的监控配置，互相进行监控配置的同步
+    1. slave配置的自动纠正  
+        哨兵会负责自动纠正slave的一些配置，比如slave如果要成为潜在的master候选人，哨兵会确保slave在复制现有master的数据; 如果slave连接到了一个错误的master上（比如故障转移之后）那么哨兵会确保它们连接到正确的master上
+    1. 从slave变为的master选举算法
+        1. 如果一个master被认为odown了，而且majority数量的哨兵都允许了主备切换，那么某个哨兵就会执行主备切换操作，此时首先要选举一个slave来，而在选举时会考虑slave的一些信息
+            1. 跟master断开连接的时长
+                1. 如果一个slave跟master断开连接已经超过了down-after-milliseconds的10倍，外加master宕机的时长，那么slave就被认为不适合选举为master，对应的公式是：  
+                ```(down-after-milliseconds * 10) + milliseconds_since_master_is_in_SDOWN_state```
+            1. slave优先级：按照slave优先级进行排序，slave priority越低，优先级就越高
+            1. 复制offset：哪个slave复制了越多的数据，offset越靠后，优先级就越高
+            1. run id（取较小的）
+    1. 名词解释：quorum（自由配置）、majority（依据slave node的数量自动计算）
+        1. 每次一个哨兵要做主备切换，首先需要quorum数量的哨兵认为odown，然后选举出一个哨兵来做切换，这个哨兵还得得到majority数量的哨兵授权，才能正式执行切换
+        1. 如果quorum < majority，比如5个哨兵，majority就是3，quorum设置为2，那么就3个哨兵授权就可以执行切换
+        1. 如果quorum >= majority，那么必须quorum数量的哨兵都授权，比如5个哨兵，quorum是5，那么必须5个哨兵都同意授权，才能执行切换
+    1. 关于configuration epoch
+        1. 哨兵会对一套redis master+slave进行监控，有相应的监控的配置。执行切换的那个哨兵，会从要切换到的新master（原salve node）那里得到一个configuration epoch，这就是一个version号，每次切换的version号都必须是唯一的
+        1. 如果第一个选举出的哨兵切换失败了，那么其他哨兵，会等待```failover-timeout```时间，然后接替刚才执行切换失败的哨兵，继续执行切换，此时会重新获取一个新的configuration epoch，作为新的version号
+    1. configuraiton传播（在哨兵中的传播）
+        1. 哨兵完成切换之后，会在自己本地更新生成最新的master配置，然后同步给其他的哨兵（通过redis的pub/sub消息机制）。这里之前的version号就很重要了，因为各种消息都是通过一个channel去发布和监听的，所以一个哨兵完成一次新的切换之后，新的master配置是跟着新的version号的。其他的哨兵都是根据版本号（是否与自己当前记录的版本号一致）来更新自己的master配置的
 
