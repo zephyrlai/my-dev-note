@@ -117,7 +117,6 @@
                 ``` sh
                 chkconfig redis_6379 on
                 ```
-
 ### 2. redis持久化
 1. 概述：  
     1. 持久化的作用：数据备份与灾难恢复
@@ -410,7 +409,7 @@
     1. 让某个slave node的永久下线（哨兵集群不再监测其是否在线、离线）  
         让master摘除某个已经下线的slave：```SENTINEL RESET mastername```，在所有的哨兵上面执行
     1. slave切换为Master的优先级  
-        slave->master选举优先级：slave-priority，值越小优先级越高
+        slave->master选举优先级：```slave-priority```(redis5.0中对应的配置项：```replica-priority```)，值越小优先级越高
     1. 基于哨兵集群架构下的安全认证
         1. 每个slave都有可能切换成master，所以每个实例都要配置两个指令
         1. master上启用安全认证，requirepass xxx
@@ -421,5 +420,14 @@
         ![](images/0313.png)  
         ![](images/0314.png)  
     1. 模拟故障：命令行kill掉redis的master node
+    1. 可以看到，经过哨兵集群的选举，推选了ip尾号0.113的从节点作为新的master node：
+        ![](images/0316.png)
+    1. 原master node重连后，也自动转变为新的slave node  
+        ![](images/0315.png)  
+    1. 各哨兵节点、redis服务的配置文件在新的master node诞生时，已被热更改：  
+        ![](images/0317.png)  
+        ![](images/0318.png)
+    1. 原来的数据依旧可以访问，不受到原master宕机的影响：  
+        ![](images/0319.png)
         
  
