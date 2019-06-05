@@ -97,7 +97,7 @@
             make && make test && make install
             ```
         1. 配置redis：
-            1. edis utils目录下，有个redis_init_script脚本，将其拷贝到linux的/etc/init.d目录中，并重命名为redis_6379
+            1. redis utils目录下，有个redis_init_script脚本，将其拷贝到linux的/etc/init.d目录中，并重命名为redis_6379
             1. （如果需要更改redis的启动端口，修改redis_6379脚本的第6行的REDISPORT（默认是6379））
             1. 将redis目录下的配置文件（redis.conf）移动到/etc/redis/6379.conf
             1. 新建redis的数据（持久化文件）存放目录：/var/redis/6379
@@ -106,6 +106,7 @@
                 1. pidfile		/var/run/redis_6379.pid         #设置redis的pid文件位置
                 1. (port		6379)           #设置redis的监听端口号
                 1. dir 		/var/redis/6379	    #设置持久化文件的存储位置
+                1. bind  192.168.xx.xx    # 绑定本机ip
         1. 设置redis开机启动：  
             1. 在redis_6379脚本中，最上面，加入两行注释
                 ``` sh
@@ -276,8 +277,7 @@
         ``` sh
         bind 192.168.0.112
         # 据说是外国的猿们请愿master-slave的说法涉嫌种族歧视，
-        # 于是redis5.0中众多涉及到slave的名词都改成了replica
-        # 开源不宜，也是醉了
+        # 于是redis5.0中众多涉及到slave的名词都改成了replica，开源不易
         slaveof 192.168.1.1 6379
         # redis 5.0 对应的配置项：replicaof 
         slave-read-only yes # 默认开启，会拒绝所有的写操作，强制搭建成读写分离的架构
@@ -368,7 +368,7 @@
             sentinel failover-timeout mymaster 180000
             ```
         1. 创建哨兵的数据文件目录：```mkdir -p /var/sentinel/5000```
-        1. 启动哨兵服务
+        1. 临时测试方式启动哨兵服务
             1. 方式一： 
                 ``` sh
                 redis-sentinel /etc/sentinal/5000.conf
@@ -377,6 +377,16 @@
                 ``` sh
                 redis-server /etc/sentinal/5000.conf --sentinel
                 ```
+        1. 生产环境下的哨兵节点启动：
+            1. 新增配置项：
+                ``` sh
+                    daemonize yes
+                    logfile /var/log/sentinal/5000
+                ```
+            1. 启动： 
+                ``` sh
+                redis-sentinel /etc/sentinel/5000.conf
+                ```
     1. 效果：
         1. 从节点01的哨兵控制台信息：
             ![](images/0310.png)  
@@ -384,11 +394,32 @@
             ![](images/0311.png)  
         1. 从节点03的哨兵控制台信息： 
             ![](images/0312.png)  
-    1. 检查哨兵状态的命令  
+    1. 检查哨兵状态的命令（通过redis-cli端口号5000登录到redis后查看：```redis-cli -h 192.168.0.112 -p 5000```）  
         ``` sh
         # SENTINEL get-master-addr-by-name mymaster
         sentinel master mymaster
         sentinel slaves mymaster
         sentinel sentinels mymaster
         ```
+    1. 哨兵节点的增加和删除
+        1. 增加单个哨兵接待：哨兵集群会自动检测，无需人为操作
+        1. 删除单个哨兵接待：
+            1. 停止sentinal进程
+            1. ```SENTINEL RESET * ```，在所有sentinal上执行，清理所有的master状态
+            1. ```SENTINEL MASTER mastername```，在所有sentinal上执行，查看所有sentinal对数量是否达成了一致
+    1. 让某个slave node的永久下线（哨兵集群不再监测其是否在线、离线）  
+        让master摘除某个已经下线的slave：```SENTINEL RESET mastername```，在所有的哨兵上面执行
+    1. slave切换为Master的优先级  
+        slave->master选举优先级：slave-priority，值越小优先级越高
+    1. 基于哨兵集群架构下的安全认证
+        1. 每个slave都有可能切换成master，所以每个实例都要配置两个指令
+        1. master上启用安全认证，requirepass xxx
+        1. slave node上配置master的连接口令，masterauth xxx
+        1. sentinal：```sentinel auth-pass <master-group-name> <pass>```
+1. 实战演练：容灾演练
+    1. redis 集群的运行情况：运行了1主3从，启动了3台从机的上的哨兵服务
+        ![](images/0313.png)  
+        ![](images/0314.png)  
+    1. 模拟故障：命令行kill掉redis的master node
         
+ 
