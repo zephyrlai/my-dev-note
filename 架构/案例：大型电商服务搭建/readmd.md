@@ -484,7 +484,7 @@
             ```  
             ![](images/0502.png)
     1. 将6个节点组成cluster集群
-        1. （旧的方式，不推荐，了解即可）
+        1. （旧的方式，已废弃，不推荐，了解即可）
             1. 安装ruby  
                 ``` sh
                 yum install -y ruby
@@ -507,13 +507,23 @@
                 #
                 gem install redis
                 #redis-4.1.2
-                cp //usr/local/mysoftware/redis/redis-5.0.5/src/redis-trib.rb /usr/local/bin
+                cp /usr/local/mysoftware/redis/redis-5.0.5/src/redis-trib.rb /usr/local/bin
                 redis-trib.rb create --replicas 1 192.168.0.111:7001 192.168.0.111:7002 192.168.0.112:7003 192.168.0.112:7004 192.168.0.113:7005 192.168.0.113:7006
                 ```
+            ![](images/0503.png)  
+            ![](images/0507.png)
         1. 执行命令：  
             ``` sh
             redis-cli --cluster create 192.168.0.111:7001 192.168.0.111:7002 192.168.0.112:7003 192.168.0.112:7004 192.168.0.113:7005 192.168.0.113:7006 --cluster-replicas 1
             ```
+        1. 效果：  
+            ![](images/0504.png)  
+            ![](images/0505.png)
+        1. 检查cluster集群状况：  
+            ``` sh
+            redis-cli --cluster check 192.168.0.111:7001
+            ```  
+            ![](images/0506.png)
 
 
 
