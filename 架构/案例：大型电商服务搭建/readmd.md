@@ -117,6 +117,15 @@
                 ``` sh
                 chkconfig redis_6379 on
                 ```
+        1. redis的正确打开方式（与关闭方式）：  
+            ``` sh
+            # 打开方式一(/etc/init.d目录下)
+            redis_6379 start
+            # 打开方式二
+            redis-server /redis.conf
+            # 关闭(用kill -9的话，还有手动删除pid文件)
+            redis-cli -h 192.168.xx.xx -p 6379 shutdown
+            ```
 ### 2. redis持久化
 1. 概述：  
     1. 持久化的作用：数据备份与灾难恢复
@@ -429,5 +438,86 @@
         ![](images/0318.png)
     1. 原来的数据依旧可以访问，不受到原master宕机的影响：  
         ![](images/0319.png)
+
+### 5. redis cluster
+1. 概述：
+1. 搭建3主3从架构的cluster集群：
+    1. 搭建6个cluster节点（端口号分别是：7001、7002、7003、7004、7005、7006，下面以7001端口号的节点为例进行搭建）
+        1. 创建目录  
+            ``` sh
+            # 放redis-cluster配置文件（注意：不是redis启动的配置文件，redis-cluster的配置文件是redis自己维护的）
+            mkdir -p /etc/redis-cluster
+            # 放redis日志文件
+            mkdir -p /var/redis/7001/log/
+            # 放redis持久化文件
+            mkdir -p /var/redis/7001/persistence/
+            ```
+        1. 将原来的```/etc/redis/6379.conf```在原目录下拷贝一份命名为```7001.conf```，并调整如下配置  
+            ``` sh
+            # 端口号
+            port 7001
+            # 开启cluster模式
+            cluster-enabled yes
+            # 配置cluster配置文件的路径（该配置文件由redis自己新建并维护）
+            cluster-config-file /etc/redis-cluster/node-7001.conf
+            # cluster节点超时时间（超时失联，则认为宕机）
+            cluster-node-timeout 15000
+            # 后台启动
+            daemonize	yes		
+            # pid文件					
+            pidfile		/var/run/redis_7001.pid 
+            # 持久化文件目录						
+            dir 		/var/redis/7001/persistence  	
+            # 日志文件目录
+            logfile 	/var/redis/7001/log/7001.log
+            # 绑定ip
+            bind 192.168.31.187	
+            # 开启aof	
+            appendonly yes
+            # 注释掉如下配置（之前配置读写分离集群时，redis自己热修改的配置）
+            # replicaof 192.168.xx.xx 6379
+            ```
+        1. 将原来的```/etc/init.d/redis_6379```在原目录下拷贝一份命名为```redis_7001```，并修改端口为7001
+        1. (/etc/init.d目录下)启动redis服务：
+            ``` sh
+            redis_7001 start
+            ```  
+            ![](images/0502.png)
+    1. 将6个节点组成cluster集群
+        1. （旧的方式，不推荐，了解即可）
+            1. 安装ruby  
+                ``` sh
+                yum install -y ruby
+                yum install -y rubygems
+                gem install redis
+                ```
+            1. 执行第三步时报错“ERROR: Error installing redis-4.0.0.gem: redis requires Ruby version >= 2.2.2.”的解决方案：    
+                ``` sh
+                sudo yum install curl
+                curl -sSL https://get.rvm.io | bash -s stable  
+                source /usr/local/rvm/scripts/rvm
+                rvm list known
+                # 安装一个版本
+                rvm install  2.4.1
+                rvm use  2.4.1
+                # 卸载一个版本
+                # rvm remove 2.0.0
+                # 设置默认版本
+                rvm use 2.4.1 --default
+                #
+                gem install redis
+                #redis-4.1.2
+                cp //usr/local/mysoftware/redis/redis-5.0.5/src/redis-trib.rb /usr/local/bin
+                redis-trib.rb create --replicas 1 192.168.0.111:7001 192.168.0.111:7002 192.168.0.112:7003 192.168.0.112:7004 192.168.0.113:7005 192.168.0.113:7006
+                ```
+        1. 执行命令：  
+            ``` sh
+            redis-cli --cluster create 192.168.0.111:7001 192.168.0.111:7002 192.168.0.112:7003 192.168.0.112:7004 192.168.0.113:7005 192.168.0.113:7006 --cluster-replicas 1
+            ```
+
+
+
+
+
         
  
