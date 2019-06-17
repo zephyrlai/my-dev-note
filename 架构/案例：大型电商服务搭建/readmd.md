@@ -524,32 +524,61 @@
             redis-cli --cluster check 192.168.0.111:7001
             ```  
             ![](images/0506.png)
-1. cluster模式下的水平扩容：
+1. cluster模式下的水平扩容、缩容：
     1. 检查已有cluster集群： 
         ``` sh
         redis-cli --cluster check 192.168.2.141:7001
         ```  
         ![](images/0509.png)
-    1. 新增一台cluster的master主节点
-        1. 单机配置一台cluster的redis节点启动（与上面的配置一样，略）
-        1. 将新配置的cluster节点新增到集群中（新增的节点ip与端口：192.168.2.144:7007）  
-            ![](images/0508.png)
+    1. 扩容： 
+        1. 新增一台cluster的master主节点
+            1. 单机配置一台cluster的redis节点并启动（与上面的配置一样，略）
+            1. 将新配置的cluster节点新增到集群中（新增的节点ip与端口：192.168.2.144:7007）  
+                ![](images/0508.png)
+                ``` sh
+                redis-cli --cluster add-node 192.168.2.144:7007 192.168.2.141:7001
+                ```
+                ![](images/0510.png) 
+            1. 检查新的集群信息
+                ![](images/0511.png) 
+        1. 迁移slot到新的节点：
             ``` sh
-            redis-cli --cluster add-node 192.168.2.144:7007 192.168.2.141:7001
-            ```
-            ![](images/0510.png) 
-        1. 检查新的集群信息
-            ![](images/0511.png) 
-    1. 迁移slot到新的节点：
-        ``` sh
-        redis-cli --cluster reshard 192.168.2.141:7001
-        # 输入先要移入新节点的slot数量：4096
-        # 输入接收slot的节点id
-        # 依次输入slot的来源节点（输入all表示全部，输入done结束）
-        ```  
-        ![](images/0512.png)  
-        ![](images/0513.png)  
-    1. 新增一台cluster的salve节点
+            # redis-cli --cluster reshard 集群名称
+            redis-cli --cluster reshard 192.168.2.141:7001
+            # 输入先要移入新节点的slot数量：4096
+            # 输入接收slot的节点id
+            # 依次输入slot的来源节点（输入all表示全部，输入done结束）
+            ```  
+            ![](images/0512.png)  
+            ![](images/0513.png)  
+        1. 新增一台cluster的salve节点
+            1. 单机配置一台cluster的redis节点并启动（与上面的配置一样，略）
+            1. 给指定的master节点添加slave节点：  
+                ``` sh
+                redis-cli --cluster add-node --cluster-slave --cluster-master-id c8d6e402532e941530e7cb9f08cdc96a7950ec4a 192.168.2.144:7008 192.168.2.141:7001
+                ```  
+                ![](images/0514.png)  
+            1. 查看集群信息：  
+                ``` sh
+                edis-cli --cluster check 192.168.2.141:7001
+                ```
+                ![](images/0515.png)
+    1. 缩容：
+        1. 先用```reshard```将数据都移除到其他节点（确保node为空之后，才能执行删除操作）
+            1. 依次向192.168.2.141:7001、192.168.2.142:7003、192.168.2.143:7005迁移1365、1365、1366个slot：  
+                ![](images/0516.png)
+        1. 删除节点：  
+            ``` sh
+                redis-cli --cluster del-node 192.168.2.144:7007 c8d6e402532e941530e7cb9f08cdc96a7950ec4a
+            ```  
+            ![](images/0517.png)  
+        1. 查看集群信息：    
+            ![](images/0518.png)
+        1. （附：）删除原master节点对应的salve node：  
+            ``` sh
+            redis-cli --cluster del-node 192.168.2.144:7008 eeed6803b1da3388b422e7e2148065de9d7bdfc7
+            ```  
+            ![](images/0519.png)  
 
 
 
