@@ -524,6 +524,23 @@
             redis-cli --cluster check 192.168.0.111:7001
             ```  
             ![](images/0506.png)
+1. cluster模式下的水平扩容：
+    1. 检查已有cluster集群： 
+        ``` sh
+
+        ```  
+        ![](images/0509.png)
+    1. 新增一台cluster的master主节点
+        1. 单机配置一台cluster的redis节点启动（与上面的配置一样，略）
+        1. 将新配置的cluster节点新增到集群中（新增的节点ip与端口：192.168.2.144:7007）  
+            ![](images/0508.png)
+            ``` sh
+            redis-cli --cluster add-node 192.168.2.144:7007 192.168.2.141:7001
+            ```
+            ![](images/0510.png) 
+        1. 检查新的集群信息
+            ![](images/0511.png) 
+    1. 新增一台cluster的salve节点
 
 
 
