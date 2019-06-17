@@ -527,7 +527,7 @@
 1. cluster模式下的水平扩容：
     1. 检查已有cluster集群： 
         ``` sh
-
+        redis-cli --cluster check 192.168.2.141:7001
         ```  
         ![](images/0509.png)
     1. 新增一台cluster的master主节点
@@ -540,7 +540,17 @@
             ![](images/0510.png) 
         1. 检查新的集群信息
             ![](images/0511.png) 
+    1. 迁移slot到新的节点：
+        ``` sh
+        redis-cli --cluster reshard 192.168.2.141:7001
+        # 输入先要移入新节点的slot数量：4096
+        # 输入接收slot的节点id
+        # 依次输入slot的来源节点（输入all表示全部，输入done结束）
+        ```  
+        ![](images/0512.png)  
+        ![](images/0513.png)  
     1. 新增一台cluster的salve节点
+
 
 
 
