@@ -32,7 +32,7 @@
         ```  
         ![](images/0101.png)  
         ![](images/0102.png) 
-1. 安装RocketMQ
+1. 安装RocketMQ并启动
     1. 安装jdk1.8（略）
     1. 下载安装包（以alibaba-rocketmq-3.2.6.tar.gz为例）
     1. 执行如下命令 
@@ -157,5 +157,13 @@
         ![](images/0104.png)  
         ![](images/0105.png)  
 1. 运行RocketMQ console
-    1. docker镜像方式（推荐）
+    1. docker镜像方式（[推荐](https://github.com/apache/rocketmq-externals/tree/master/rocketmq-console)）
+        1. 另开一台虚拟机部署docker服务（参照[笔记](https://github.com/zephyrlai/my-dev-note/blob/master/Docker%E7%9B%B8%E5%85%B3/centos7%E4%B8%8Bdocker%E5%AE%89%E8%A3%85.md)）
+        1. 拉取对应的docker镜像
+        1. 运行镜像：  
+            ``` sh
+            docker run -e "JAVA_OPTS=-Drocketmq.namesrv.addr=192.168.2.151:9876;192.168.2.152:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false" -p 8080:8080 -t styletang/rocketmq-console-ng
+            ```
+        1. 效果： 
+            ![](images/0107.png)
 

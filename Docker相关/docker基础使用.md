@@ -97,7 +97,10 @@
 ## 五、Docekerfile
 1. 一些理论：
     1. Dockerfile是用来构建Docker镜像的构建文件，是由一系列命令和参数构成的脚本。
-    1. Dockerfile构建的三个步骤：1.编写Dockerfile；2.执行```docker build```;3.执行```docker run```.
+    1. Dockerfile构建的三个步骤：
+        1. 编写Dockerfile；
+        2. 执行```docker build```;
+        3. 执行```docker run```.
     1. 编写规范：
         1. 每个保留字指令必须为大写，并且后面至少要跟随一个参数
         1. 指令按照从上往下，顺序执行
