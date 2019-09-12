@@ -1,0 +1,25 @@
+// 01. 普通混合（编译到原生css中的）
+.my-mixin{
+    width: 100px;
+    height: 100px;
+    background: pink;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+#wrap{
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border: 1px solid;
+    margin: 0 auto;
+    #inner1{
+        .my-mixin;
+    };
+    #inner2{
+        .my-mixin;
+    }
+}

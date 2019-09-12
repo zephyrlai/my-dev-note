@@ -1,0 +1,10 @@
+// 05 匹配模式(会先调用同名的、以@_为入参的mixin)
+.my-mixin(@_){
+    background-color: #ccc;
+    margin: 0 0;
+}
+
+.my-mixin(A,0px,0px){
+    color: #555;
+    border: 0px 0px;
+}

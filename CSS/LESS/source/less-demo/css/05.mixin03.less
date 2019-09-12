@@ -1,0 +1,25 @@
+// 03 带参数的混合
+.my-mixin(@w,@c){
+    width: @w;
+    height: 100px;
+    background: @c;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+#wrap{
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border: 1px solid;
+    margin: 0 auto;
+    #inner1{
+        .my-mixin(100px,#ccc);
+    };
+    #inner2{
+        .my-mixin(200px,#555);
+    }
+}
