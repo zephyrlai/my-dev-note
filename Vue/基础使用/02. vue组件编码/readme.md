@@ -12,7 +12,7 @@
         cd vue_demo
         npm install
         npm run dev
-        ```  
+        ```
     1. 最终将出现如下所示：  
         ![](images/vue17.png)  
     1. 访问： 
@@ -48,7 +48,7 @@
             font-size:30px;
         }
     </style>
-    ```  
+    ```
 1. App.vue:  
     1. 引入HelloWorld组件
     2. 映射HelloWorl组件标签
@@ -169,7 +169,7 @@
             }
             ```
     1. 注意：
-        1. 此方式用于父组件向子组件传递数据
+        1. 此方式用于**父组件向子组件**传递数据
         1. 所有标签属性都会成为组件对象的属性, 模板页面可以直接引用
         1. 缺陷:
             1. 如果需要向非子后代传递数据必须多层逐层传递
@@ -256,7 +256,7 @@
             demoP.innerHTML = demoP.innerHTML + "index[" + index + "]: " + item + "<br>"; 
         }
         </script>
-        ```  
+        ```
     1. 效果：
         ![](images/vue-ps-02.png)
 1. JavaScript Array map() 方法
@@ -280,4 +280,4 @@
 
 
 
-          
+​          

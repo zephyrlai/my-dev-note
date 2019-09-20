@@ -10,14 +10,14 @@
     <div class="app">
         <h4>1. v-for遍历数组</h4>
         <ul>
-            <li v-for="(item,index) in persons" :key="index">{{index}}---name:{{item.name}}---age:{{item.age}}
+            <li v-for="(item,index) in persons">{{index}}---name:{{item.name}}---age:{{item.age}}
                 ---<button @click="myDelete(index)">删除</button>
                 ---<button @click="myUpdate(index,{name:'dog',age:2})">更新</button>
             </li>
         </ul>
         <h4>2. v-for遍历对象中的属性</h4>
         <ul>
-            <li v-for="(key,value) in persons[1]" :key="key">{{value}}-----{{key}}</li>
+            <li v-for="(key,value) in persons[1]">{{value}}-----{{key}}</li>
         </ul>
     </div>
 </body>

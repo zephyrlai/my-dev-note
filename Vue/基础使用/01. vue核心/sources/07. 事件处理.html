@@ -37,10 +37,11 @@
                 console.log(content);
             },
             testMethod02(event){
+                // console.dir(event);
                 console.log(event.target.innerHTML);
             },
             testMethod03(content,event){
-                console.log(content+event.target.innerText);
+                console.log(content+' '+event.target.innerText);
             },
             testMethod04(){
                 console.log('outer');

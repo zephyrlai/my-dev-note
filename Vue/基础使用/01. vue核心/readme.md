@@ -23,7 +23,7 @@
             }
         })
     </script>
-    ```  
+    ```
 1. 效果： 
         ![image text](images/vue02.gif)
 ### 2. 模板语法：
@@ -69,7 +69,7 @@
             }
         })
     </script>
-    ```  
+    ```
 1. 效果：  
     ![image text](images/vue03.gif)
 ### 3. 计算属性与监视
@@ -213,7 +213,7 @@
             }
         })
     </script>
-    ```  
+    ```
 1. 效果：  
     <img src='images/vue06.gif' style='width:50%'/>
 ### 6. 列表渲染
@@ -333,6 +333,7 @@
     1. 停止事件冒泡：以点击事件为例：```@click.stop='xxx'```  
     1. 阻止事件默认行为：以a标签的点击事件为例：```@click.prevent='xxx'```  
 1. 按键修饰符：
+    
     1. 以keyup事件为例：```@keyup.按键值/按键名```
 1. 参考代码：  
     ``` html
@@ -602,11 +603,11 @@
     </script>
     ```
 1. 效果：
-    ![](images/vue12.gif)
+    ![](images/vue13.gif)
 ### 11. 过滤器
-1. 定义过滤器(定义在vue对象外面)  
+1. **定义** 过滤器(定义在vue对象外面)  
     ```Vue.filter(filterName,function(val,attr1,attr2...){...})```
-1. 使用过滤器(以双大括号表达式为例)  
+1. **使用** 过滤器(以双大括号表达式为例)  
     ```{{data | filterName(attr1,attr2...)}}```
 1. 参考代码：
     ``` html
@@ -652,7 +653,7 @@
     1. v-show: 通过控制 display 样式来控制显示/隐藏 
     1. v-for: 遍历数组/对象 
     1. v-on: 绑定事件监听, 一般简写为@ 
-    1. v-bind: 强制绑定解析表达式, 可以省略 v-bind 
+    1. v-bind: 强制绑定解析表达式, 可以省略 v-bind （只写```:```）
     1. v-model: 双向数据绑定 
     1. ref: 指定唯一标识,vue 对象通过$refs 属性访问这个元素对象 
     1. v-cloak: 防止闪现, 与 css 配合:[v-cloak]{display:none}
@@ -693,7 +694,7 @@
         directives:{
             name:function(){...}
         }
-        ``` 
+        ```
     1. bind里有什么：  
         ![](images/vue16.png)
     1. 参考代码：
@@ -741,7 +742,7 @@
 1. 参考代码：
     ``` js
 
-    ``` 
+    ```
     ``` html
 
     ```
@@ -753,7 +754,7 @@
 1. ```=>```（es6语法中的arrow function，类似于Java8中的lambda表达式）
     ``` js
     (x) => x+6 ;
-    ```  
+    ```
     相当于  
     ``` js
     function(x){
