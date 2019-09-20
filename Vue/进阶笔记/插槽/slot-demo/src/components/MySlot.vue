@@ -6,10 +6,10 @@
             save
         </my-btn>
 
-        <h3>作用域</h3>
-        <my-btn>
+        <h3>编译作用域</h3>
+        <my-btn name='123'>
             <img class='my-ico' src="../assets/logo.png" />
-            save {{user.name}}
+            save-{{user.name}}-{{name}}
         </my-btn>
 
         <h3>后备内容</h3>
@@ -40,6 +40,40 @@
                 </div>
             </template>
         </my-article>
+
+        <h3>具名插槽的缩写</h3>
+        <p>将'v-slot:"header"'写作'#header'</p>
+        <my-article>
+            <template #header>
+                <div>
+                    <h5>标题</h5>
+                </div>
+            </template>
+            <template #default>
+                <div>
+                    <p>段落01段落01段落01段落01段落01段落01段落01段落01</p>
+                </div>
+            </template>
+            <template #footer>
+                <div>
+                    <h5>页脚</h5>
+                </div>
+            </template>
+            <template>
+                <div>
+                    <p>段落02段落02段落02段落02段落02段落02段落02段落02段落02</p>
+                </div>
+            </template>
+        </my-article>
+
+        <h3>作用域插槽</h3>
+        <p>让插槽的数据在父级元素中可用</p>
+        <my-slot-bind>
+            <template v-slot:default='slotProps'>
+                {{slotProps.subUser.name}}     
+            </template>
+        </my-slot-bind>
+
     </div>
   
 </template>
@@ -47,6 +81,7 @@
 <script>
 import MyBtn from './MyBtn'
 import MyArticle from './MyArticle'
+import MySlotBind from './MySlotBind'
 export default {
     data() {
         return {
@@ -55,7 +90,8 @@ export default {
     },
     components: {
         MyBtn,
-        MyArticle
+        MyArticle,
+        MySlotBind
     }
 }
 </script>
